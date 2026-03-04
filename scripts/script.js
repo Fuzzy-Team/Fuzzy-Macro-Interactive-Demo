@@ -493,6 +493,7 @@ function loadDragListOrder(dragListElement, orderArray, settings) {
 //load fields based on the obj data
 eel.expose(loadInputs);
 function loadInputs(obj, save = "") {
+  if (!obj || typeof obj !== "object") return;
   for (const [k, v] of Object.entries(obj)) {
     // Specific logic for theme switching
     if (k === "gui_theme") {
@@ -765,12 +766,17 @@ function getDropdownValue(ele) {
 
 function setDropdownValue(ele, value) {
   const optionsEle = ele.children[1].children[0];
+  let matched = false;
   for (let i = 0; i < optionsEle.children.length; i++) {
     const x = optionsEle.children[i];
     if (x.dataset.value == value) {
       updateDropDownDisplay(x);
+      matched = true;
       break;
     }
+  }
+  if (!matched && optionsEle.children.length > 0) {
+    updateDropDownDisplay(optionsEle.children[0]);
   }
 }
 //close all other dropdown menus
