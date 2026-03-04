@@ -21,6 +21,76 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+// Strongly disable specific controls to prevent interaction (JS-level)
+document.addEventListener("DOMContentLoaded", function () {
+  const selectorsToDisable = [
+    "#start-btn",
+    "#stop-btn",
+    "#import-patterns-button",
+    "#update-btn",
+    "#export-profile-select",
+    "#import-profile-file",
+    "#export-field-button",
+    "#import-field-button",
+    "#confirm-import-button",
+    "#cancel-import-button",
+    "#beta_update_button",
+    "#reset-field-button",
+  ];
+
+  selectorsToDisable.forEach((sel) => {
+    const el = document.querySelector(sel);
+    if (el) el.disabled = true;
+  });
+
+  // Disable buttons that rely on inline onclick handlers
+  document.querySelectorAll('button[onclick*="exportProfile"]').forEach((b) => (b.disabled = true));
+  document.querySelectorAll('button[onclick*="confirmImportProfile"]').forEach((b) => (b.disabled = true));
+  document.querySelectorAll('button[onclick*="import-profile-file"]').forEach((b) => (b.disabled = true));
+
+  // Also disable gather export/import buttons if present
+  const gatherSelectors = ['#export-field-button', '#import-field-button', '#confirm-import-button', '#cancel-import-button', '#beta_update_button', '#reset-field-button'];
+  gatherSelectors.forEach((sel) => {
+    const be = document.querySelector(sel);
+    if (be) be.disabled = true;
+  });
+
+  // Capture and block click events on these controls (prevents delegated handlers and programmatic clicks)
+  const blockedSelectors = selectorsToDisable.concat([
+    'button[onclick*="exportProfile"]',
+    'button[onclick*="confirmImportProfile"]',
+    'button[onclick*="import-profile-file"]',
+    '#export-field-button',
+    '#import-field-button',
+    '#confirm-import-button',
+    '#cancel-import-button',
+    '#beta_update_button',
+    '#reset-field-button',
+  ]);
+
+  function blockingClickHandler(e) {
+    try {
+      for (const sel of blockedSelectors) {
+        if (!e.target) continue;
+        if (e.target.matches && e.target.matches(sel)) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          return;
+        }
+        if (e.target.closest && e.target.closest(sel)) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          return;
+        }
+      }
+    } catch (err) {
+      // ignore
+    }
+  }
+
+  document.addEventListener("click", blockingClickHandler, true);
+});
 //change the styling of the purple buttons
 //element: the purple button element
 //label: the text labels of the button [not-active-label, active-label]

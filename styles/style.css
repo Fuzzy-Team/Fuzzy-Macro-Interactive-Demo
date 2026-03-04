@@ -1081,3 +1081,40 @@ select:focus {
 #import-profile-modal h3 {
   color: var(--text-main) !important;
 }
+
+/* Disable specific control buttons (visual + interaction) */
+/* Start/Stop, import patterns, update, and profile import/export controls */
+#start-btn,
+#stop-btn,
+#import-patterns-button,
+#update-btn,
+.import-export-button,
+button[onclick*="exportProfile"],
+button[onclick*="confirmImportProfile"],
+button[onclick*="import-profile-file"],
+.profile-btn-secondary,
+.profile-btn-primary {
+  opacity: 0.45 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Also make the export select and hidden file input inert visually */
+#export-profile-select,
+#import-profile-file {
+  opacity: 0.45 !important;
+  pointer-events: none !important;
+}
+
+/* Gather import/export controls and beta update button */
+#export-field-button,
+#import-field-button,
+#confirm-import-button,
+#cancel-import-button,
+#import-modal,
+#beta_update_button,
+#reset-field-button {
+  opacity: 0.45 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
