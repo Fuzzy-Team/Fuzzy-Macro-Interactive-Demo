@@ -123,6 +123,11 @@
     "mountain top": { shift_lock: false, field_drift_compensation: false, shape: "diamonds", size: "s", width: 3, invert_lr: false, invert_fb: false, turn: "left", turn_times: 1, mins: 8, backpack: 95, return: "walk", use_whirlwig_fallback: false, start_location: "bottom", distance: 4, goo: false, goo_interval: 3 }
   };
 
+  // In-memory cache to avoid repeated localStorage JSON parsing
+  let stateCache = null;
+  let saveTimer = null;
+  const SAVE_DEBOUNCE_MS = 50;
+
   function deepClone(value) {
     return JSON.parse(JSON.stringify(value));
   }
@@ -221,28 +226,65 @@
   }
 
   function loadState() {
+    if (stateCache) return stateCache;
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return defaultState();
-      const parsed = JSON.parse(raw);
-      return {
+      const parsed = raw ? JSON.parse(raw) : null;
+      stateCache = {
         ...defaultState(),
-        ...parsed,
-        general: { ...defaultState().general, ...(parsed.general || {}) },
-        profiles: parsed.profiles || { Default: defaultProfileSettings() },
-        fieldsData: { ...defaultFieldsData(), ...(parsed.fieldsData || {}) },
+        ...(parsed || {}),
+        general: { ...defaultState().general, ...((parsed && parsed.general) || {}) },
+        profiles: (parsed && parsed.profiles) || { Default: defaultProfileSettings() },
+        fieldsData: { ...defaultFieldsData(), ...((parsed && parsed.fieldsData) || {}) },
       };
+      return stateCache;
     } catch (err) {
-      return defaultState();
+      stateCache = defaultState();
+      return stateCache;
     }
   }
 
-  function saveState(state) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  function saveState(state, immediate) {
+    // update cache
+    stateCache = state;
     if (state.general && state.general.gui_theme) {
-      localStorage.setItem("gui_theme", state.general.gui_theme);
+      try {
+        localStorage.setItem("gui_theme", state.general.gui_theme);
+      } catch (e) {
+        // ignore storage failures
+      }
     }
+
+    const writeNow = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stateCache));
+      } catch (e) {
+        // ignore storage failures
+      }
+    };
+
+    if (immediate) {
+      if (saveTimer) {
+        clearTimeout(saveTimer);
+        saveTimer = null;
+      }
+      writeNow();
+      return;
+    }
+
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      writeNow();
+      saveTimer = null;
+    }, SAVE_DEBOUNCE_MS);
   }
+
+  // If another tab modifies storage, invalidate cache so next read reloads
+  window.addEventListener && window.addEventListener("storage", (e) => {
+    if (e && e.key === STORAGE_KEY) {
+      stateCache = null;
+    }
+  });
 
   function getCurrentProfile(state) {
     const current = state.currentProfile || "Default";

@@ -1,29 +1,4 @@
-// Expose a function to reset the update button from Python
-window.updateButtonReset = function () {
-  const updateBtn = document.getElementById("update-btn");
-  if (updateBtn) {
-    updateBtn.classList.remove("active");
-    updateBtn.innerText = "Reset demo";
-  }
-};
-if (window.eel) eel.expose(window.updateButtonReset, 'updateButtonReset');
-// Ensure sidebar reset demo button always works
-document.addEventListener("DOMContentLoaded", function () {
-  const updateBtn = document.getElementById("update-btn");
-  if (updateBtn) {
-    updateBtn.addEventListener("click", async function (event) {
-      if (!event.currentTarget.classList.contains("active")) {
-        purpleButtonToggle(event.currentTarget, ["Reset demo", "Resetting"]);
-        try {
-          localStorage.clear();
-          await new Promise((resolve) => setTimeout(resolve, 300));
-        } finally {
-          if (typeof window.updateButtonReset === "function") window.updateButtonReset();
-        }
-      }
-    });
-  }
-});
+// (Reset Demo) expose function to reset the button state from Python is defined below
 window.updateButtonReset = function () {
   const updateBtn = document.getElementById("update-btn");
   if (updateBtn) {

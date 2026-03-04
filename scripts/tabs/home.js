@@ -799,17 +799,9 @@ $("#home-placeholder")
   //     eel.resume();
   //   }
   // })
-  .on("click", "#update-btn", async (event) => {
-    //start button (Reset demo)
-    if (!event.currentTarget.classList.contains("active")) {
-      purpleButtonToggle(event.currentTarget, ["Reset demo", "Resetting"]);
-      try {
-        localStorage.clear();
-        await new Promise((resolve) => setTimeout(resolve, 300));
-      } finally {
-        if (typeof window.updateButtonReset === "function") window.updateButtonReset();
-      }
-    }
+  .on("click", "#update-btn", (event) => {
+    // Reset Demo button handled globally; ignore delegated handler here
+    event.preventDefault();
   })
   .on("click", "#clear-timers-btn", async (event) => {
     const btn = event.currentTarget;
