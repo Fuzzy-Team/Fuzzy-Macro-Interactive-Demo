@@ -78,6 +78,51 @@
     "planters",
   ];
 
+  // Default patterns (from default-settings/pattern-list.txt)
+  const DEFAULT_PATTERNS = [
+    "auryn",
+    "bambe",
+    "bambootiquev2",
+    "bowl",
+    "cornerxe_lol",
+    "cornerxsnake",
+    "diamonds",
+    "e_lol",
+    "fork",
+    "kettle",
+    "lines",
+    "old e_lol",
+    "skillet",
+    "slimline",
+    "snake",
+    "spiral",
+    "squares",
+    "stationary",
+    "supercat",
+    "xsnake",
+  ];
+
+  // Default per-field settings (from default-settings/fields.txt)
+  const DEFAULT_FIELDS_DATA = {
+    "sunflower": { shift_lock: false, field_drift_compensation: false, shape: "cornerxe_lol", size: "m", width: 4, invert_lr: true, invert_fb: false, turn: "none", turn_times: 2, mins: 8, backpack: 95, return: "walk", start_location: "upper left", distance: 4 },
+    "dandelion": { shift_lock: false, field_drift_compensation: false, shape: "e_lol", size: "m", width: 2, invert_lr: false, invert_fb: false, turn: "none", turn_times: 1, mins: 8, backpack: 100, return: "walk", start_location: "upper right", distance: 9 },
+    "mushroom": { shift_lock: false, field_drift_compensation: false, shape: "cornerxe_lol", size: "m", width: 4, invert_lr: false, invert_fb: false, turn: "none", turn_times: 4, mins: 8, backpack: 95, return: "walk", start_location: "upper right", distance: 6 },
+    "blue flower": { shift_lock: false, field_drift_compensation: false, shape: "e_lol", size: "m", width: 3, invert_lr: false, invert_fb: false, turn: "none", turn_times: 2, mins: 8, backpack: 95, return: "walk", start_location: "center", distance: 1 },
+    "clover": { shift_lock: false, field_drift_compensation: false, shape: "diamonds", size: "s", width: 3, invert_lr: false, invert_fb: false, turn: "left", turn_times: 1, mins: 8, backpack: 95, return: "walk", start_location: "lower right", distance: 4, goo: false, goo_interval: 3 },
+    "strawberry": { shift_lock: false, field_drift_compensation: false, shape: "cornerxe_lol", size: "m", width: "4", invert_lr: true, invert_fb: false, turn: "right", turn_times: "2", mins: "1", backpack: "95", return: "walk", start_location: "upper right", distance: "7" },
+    "spider": { shift_lock: false, field_drift_compensation: false, shape: "cornerxe_lol", size: "m", width: 3, invert_lr: true, invert_fb: false, turn: "none", turn_times: 1, mins: 8, backpack: 95, return: "walk", start_location: "upper left", distance: 7 },
+    "bamboo": { shift_lock: false, field_drift_compensation: false, shape: "cornerxe_lol", size: "m", width: 4, invert_lr: false, invert_fb: false, turn: "left", turn_times: 2, mins: 8, backpack: 95, return: "walk", start_location: "upper left", distance: 7, goo: false, goo_interval: 3 },
+    "pineapple": { shift_lock: false, field_drift_compensation: false, shape: "cornerxe_lol", size: "m", width: 4, invert_lr: true, invert_fb: false, turn: "left", turn_times: 1, mins: 8, backpack: 95, return: "walk", start_location: "upper left", distance: 7 },
+    "stump": { shift_lock: false, field_drift_compensation: false, shape: "squares", size: "s", width: 2, invert_lr: false, invert_fb: false, turn: "right", turn_times: 2, mins: 8, backpack: 95, return: "walk", start_location: "lower right", distance: 3 },
+    "cactus": { shift_lock: false, field_drift_compensation: false, shape: "e_lol", size: "s", width: 3, invert_lr: false, invert_fb: false, turn: "none", turn_times: 1, mins: 8, backpack: 95, return: "walk", start_location: "center", distance: 1 },
+    "pumpkin": { shift_lock: false, field_drift_compensation: false, shape: "cornerxe_lol", size: "s", width: 3, invert_lr: false, invert_fb: false, turn: "none", turn_times: 1, mins: 8, backpack: 95, return: "walk", start_location: "upper right", distance: 7 },
+    "pine tree": { shift_lock: true, field_drift_compensation: false, shape: "skillet", size: "m", width: 1, invert_lr: false, invert_fb: false, turn: "left", turn_times: 4, mins: 10, backpack: 95, return: "walk", start_location: "upper left", distance: 8 },
+    "rose": { shift_lock: false, field_drift_compensation: false, shape: "supercat", size: "m", width: 1, invert_lr: false, invert_fb: false, turn: "right", turn_times: 3, mins: 8, backpack: 95, return: "walk", start_location: "lower right", distance: 10, goo: false, goo_interval: 3 },
+    "pepper": { shift_lock: false, field_drift_compensation: false, shape: "e_lol", size: "m", width: 2, invert_lr: false, invert_fb: false, turn: "left", turn_times: 2, mins: 8, backpack: 100, return: "walk", start_location: "upper right", distance: 3 },
+    "coconut": { shift_lock: false, field_drift_compensation: false, shape: "cornerxsnake", size: "s", width: 3, invert_lr: false, invert_fb: false, turn: "right", turn_times: 4, mins: 8, backpack: 100, return: "walk", whirligig_slot: 1, start_location: "upper right", distance: 5 },
+    "mountain top": { shift_lock: false, field_drift_compensation: false, shape: "diamonds", size: "s", width: 3, invert_lr: false, invert_fb: false, turn: "left", turn_times: 1, mins: 8, backpack: 95, return: "walk", use_whirlwig_fallback: false, start_location: "bottom", distance: 4, goo: false, goo_interval: 3 }
+  };
+
   function deepClone(value) {
     return JSON.parse(JSON.stringify(value));
   }
@@ -106,7 +151,8 @@
 
   function defaultProfileSettings() {
     return {
-      fields: ["sunflower", "dandelion", "mushroom", "clover", "pine tree"],
+      // Defaults loaded from default-settings/settings.txt
+      fields: ["pine tree", "sunflower", "dandelion", "pine tree", "sunflower"],
       fields_enabled: [true, false, false, false, false],
       planters_mode: 0,
       task_priority_order: deepClone(DEFAULT_TASK_PRIORITY_ORDER),
@@ -121,13 +167,29 @@
       auto_field_boost: false,
       ant_challenge: false,
       planters: false,
+      // additional defaults from settings.txt
+      manual_planters_collect_every: 1,
+      manual_planters_collect_full: false,
+      cycle1_1_planter: "none",
+      cycle1_2_planter: "none",
+      cycle1_3_planter: "none",
+      cycle1_1_field: "none",
+      cycle1_2_field: "none",
+      cycle1_3_field: "none",
+      mondo_buff_interrupt_gathering: true,
     };
   }
 
   function defaultFieldsData() {
+    // Use predefined default field settings when available, falling back to generic defaults
     const fields = {};
     FIELD_NAMES.forEach((name) => {
-      fields[name] = defaultFieldSettings();
+      const key = String(name || "");
+      if (DEFAULT_FIELDS_DATA[key]) {
+        fields[key] = { ...defaultFieldSettings(), ...DEFAULT_FIELDS_DATA[key] };
+      } else {
+        fields[key] = defaultFieldSettings();
+      }
     });
     return fields;
   }
@@ -143,7 +205,7 @@
         Default: defaultProfileSettings(),
       },
       fieldsData: defaultFieldsData(),
-      patterns: ["circle", "spiral", "line"],
+      patterns: deepClone(DEFAULT_PATTERNS),
       runState: 3,
       recentLogs: [],
       manualPlanterData: {
