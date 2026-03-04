@@ -1320,3 +1320,80 @@ observer.observe(document.body, {
   childList: true,
   subtree: true
 });
+
+// Welcome demo modal: show once unless user disables it
+function showWelcomeModalIfNeeded() {
+  try {
+    if (localStorage.getItem("hideWelcome") === "true") return;
+  } catch (e) {
+    // localStorage might be unavailable; fail silently
+    return;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "welcome-overlay";
+
+  const box = document.createElement("div");
+  box.className = "welcome-box";
+
+  const title = document.createElement("div");
+  title.style.fontSize = "18px";
+  title.style.fontWeight = "600";
+  title.style.marginBottom = "8px";
+  title.textContent = "Welcome to the demo";
+
+  const msg = document.createElement("div");
+  msg.style.marginBottom = "16px";
+  msg.style.fontSize = "14px";
+  msg.innerText = "This demo shows a limited, read-only view. Some controls are disabled.";
+
+  const btnRow = document.createElement("div");
+  btnRow.style.display = "flex";
+  btnRow.style.justifyContent = "center";
+  btnRow.style.gap = "8px";
+
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "btn";
+  closeBtn.textContent = "Close";
+  closeBtn.style.padding = "8px 12px";
+
+  const dontShowBtn = document.createElement("button");
+  dontShowBtn.className = "btn primary";
+  dontShowBtn.textContent = "Don't show again";
+  dontShowBtn.style.padding = "8px 12px";
+
+  btnRow.appendChild(closeBtn);
+  btnRow.appendChild(dontShowBtn);
+
+  box.appendChild(title);
+  box.appendChild(msg);
+  box.appendChild(btnRow);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  function removeModal() {
+    try { document.body.removeChild(overlay); } catch (e) { /* ignore */ }
+  }
+
+  closeBtn.addEventListener("click", function () {
+    removeModal();
+  });
+
+  dontShowBtn.addEventListener("click", function () {
+    try {
+      localStorage.setItem("hideWelcome", "true");
+    } catch (e) {
+      // ignore
+    }
+    removeModal();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  try {
+    // show modal shortly after load so it doesn't clash with other initialization
+    setTimeout(showWelcomeModalIfNeeded, 250);
+  } catch (e) {
+    // ignore
+  }
+});
