@@ -197,7 +197,7 @@
   function defaultState() {
     return {
       general: {
-        gui_theme: localStorage.getItem("gui_theme") || "purple",
+        gui_theme: localStorage.getItem("gui_theme") || "brown",
         macro_mode: "normal",
       },
       currentProfile: "Default",

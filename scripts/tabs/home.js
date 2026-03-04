@@ -800,10 +800,15 @@ $("#home-placeholder")
   //   }
   // })
   .on("click", "#update-btn", async (event) => {
-    //start button
+    //start button (Reset demo)
     if (!event.currentTarget.classList.contains("active")) {
-      purpleButtonToggle(event.currentTarget, ["Update", "Updating"]);
-      await eel.update();
+      purpleButtonToggle(event.currentTarget, ["Reset demo", "Resetting"]);
+      try {
+        localStorage.clear();
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      } finally {
+        if (typeof window.updateButtonReset === "function") window.updateButtonReset();
+      }
     }
   })
   .on("click", "#clear-timers-btn", async (event) => {

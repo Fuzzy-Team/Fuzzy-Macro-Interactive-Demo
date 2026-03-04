@@ -1084,10 +1084,10 @@ select:focus {
 
 /* Disable specific control buttons (visual + interaction) */
 /* Start/Stop, import patterns, update, and profile import/export controls */
+.start-btn,
 #start-btn,
 #stop-btn,
 #import-patterns-button,
-#update-btn,
 .import-export-button,
 button[onclick*="exportProfile"],
 button[onclick*="confirmImportProfile"],

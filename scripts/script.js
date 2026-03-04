@@ -3,21 +3,54 @@ window.updateButtonReset = function () {
   const updateBtn = document.getElementById("update-btn");
   if (updateBtn) {
     updateBtn.classList.remove("active");
-    updateBtn.innerText = "Update";
+    updateBtn.innerText = "Reset demo";
   }
 };
 if (window.eel) eel.expose(window.updateButtonReset, 'updateButtonReset');
-// Ensure sidebar update button always works
+// Ensure sidebar reset demo button always works
 document.addEventListener("DOMContentLoaded", function () {
   const updateBtn = document.getElementById("update-btn");
   if (updateBtn) {
     updateBtn.addEventListener("click", async function (event) {
       if (!event.currentTarget.classList.contains("active")) {
-        purpleButtonToggle(event.currentTarget, ["Update", "Updating"]);
-        if (window.eel && typeof eel.update === "function") {
-          await eel.update();
+        purpleButtonToggle(event.currentTarget, ["Reset demo", "Resetting"]);
+        try {
+          localStorage.clear();
+          await new Promise((resolve) => setTimeout(resolve, 300));
+        } finally {
+          if (typeof window.updateButtonReset === "function") window.updateButtonReset();
         }
       }
+    });
+  }
+});
+window.updateButtonReset = function () {
+  const updateBtn = document.getElementById("update-btn");
+  if (updateBtn) {
+    updateBtn.classList.remove("active");
+    updateBtn.innerText = "Reset Demo";
+  }
+};
+if (window.eel) eel.expose(window.updateButtonReset, 'updateButtonReset');
+
+// Replace update behavior: Reset demo (clear localStorage) and reload
+document.addEventListener("DOMContentLoaded", function () {
+  const updateBtn = document.getElementById("update-btn");
+  if (updateBtn) {
+    updateBtn.textContent = "Reset Demo";
+    updateBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      const ok = confirm(
+        "Reset demo data? This will clear all local settings and preferences. Continue?"
+      );
+      if (!ok) return;
+      try {
+        localStorage.clear();
+      } catch (e) {
+        console.error("Failed to clear localStorage:", e);
+      }
+      // reload to apply cleared state
+      location.reload();
     });
   }
 });
@@ -28,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
     "#start-btn",
     "#stop-btn",
     "#import-patterns-button",
-    "#update-btn",
     "#export-profile-select",
     "#import-profile-file",
     "#export-field-button",
@@ -49,24 +81,11 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll('button[onclick*="confirmImportProfile"]').forEach((b) => (b.disabled = true));
   document.querySelectorAll('button[onclick*="import-profile-file"]').forEach((b) => (b.disabled = true));
 
-  // Also disable gather export/import buttons if present
-  const gatherSelectors = ['#export-field-button', '#import-field-button', '#confirm-import-button', '#cancel-import-button', '#beta_update_button', '#reset-field-button'];
-  gatherSelectors.forEach((sel) => {
-    const be = document.querySelector(sel);
-    if (be) be.disabled = true;
-  });
-
   // Capture and block click events on these controls (prevents delegated handlers and programmatic clicks)
   const blockedSelectors = selectorsToDisable.concat([
     'button[onclick*="exportProfile"]',
     'button[onclick*="confirmImportProfile"]',
     'button[onclick*="import-profile-file"]',
-    '#export-field-button',
-    '#import-field-button',
-    '#confirm-import-button',
-    '#cancel-import-button',
-    '#beta_update_button',
-    '#reset-field-button',
   ]);
 
   function blockingClickHandler(e) {
