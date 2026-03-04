@@ -1113,7 +1113,8 @@ button[onclick*="import-profile-file"],
 #cancel-import-button,
 #import-modal,
 #beta_update_button,
-#reset-field-button {
+#reset-field-button,
+#export_debug_button {
   opacity: 0.45 !important;
   pointer-events: none !important;
   cursor: not-allowed !important;

@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "#cancel-import-button",
     "#beta_update_button",
     "#reset-field-button",
+    "#export_debug_button",
   ];
 
   selectorsToDisable.forEach((sel) => {
