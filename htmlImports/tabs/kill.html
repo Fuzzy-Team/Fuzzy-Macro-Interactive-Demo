@@ -42,7 +42,10 @@
             length: 8,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "These modifiers adjust mob timer expectations so the macro can better predict when repeatable enemies have respawned.",
+      });
     </script>
   </div>
 
@@ -104,7 +107,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Regular mob tasks handle repeatable enemies such as ladybugs, rhino beetles, and spiders as part of the macro's combat loop.",
+      });
     </script>
   </div>
 
@@ -175,7 +181,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Stinger Hunt searches supported fields for Vicious Bee at night and routes through the enabled field list.",
+      });
 
       buildStandardContainer(bossMobsParent, "Stump Snail 🐌", "", [
         {
@@ -191,6 +200,7 @@
           id: "stump_snail_amulet",
           title: "Amulet",
           desc: "What to do with the stump snail amulet.<br><br><strong>Keep</strong> - select the 'keep old' option<br><strong>Replace</strong> - select the 'replace' option<br><strong>Stop</strong> - Do not select any option, stop the macro until the amulet is kept/replaced<br><strong>Wait for command</strong> - Do not select any option, stop the macro until it receives a command to keep or replace the amulet. (Requires a discord bot)",
+          docs: "discordBot",
           type: {
             name: "dropdown",
             data: ["Keep", "Replace", "Stop", "Wait for command"],
@@ -198,7 +208,10 @@
             length: 12,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Stump Snail runs can take a long time, so amulet handling and Discord command behavior matter more here than with most other mobs.",
+      });
 
       buildStandardContainer(bossMobsParent, "Coconut Crab", "", [
         {
@@ -210,7 +223,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Enable Coconut Crab only if your hive can survive and clear the fight consistently enough for automation to be worth it.",
+      });
 
       buildStandardContainer(bossMobsParent, "King Beetle", "", [
         {
@@ -222,7 +238,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "King Beetle is a simpler boss task, but it still depends on your combat readiness and route timing.",
+      });
 
       buildStandardContainer(bossMobsParent, "Tunnel Bear", "", [
         {
@@ -234,7 +253,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Tunnel Bear automation depends on your hive's ability to finish the fight before survivability or timing becomes inconsistent.",
+      });
     </script>
   </div>
 
@@ -251,7 +273,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Ant Challenge automation runs the challenge and keeps the resulting amulet without pausing for manual review.",
+      });
     </script>
   </div>
 </div>
