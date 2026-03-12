@@ -4,6 +4,91 @@
 //commonly used
 const slotArray = [1, 2, 3, 4, 5, 6, 7];
 
+const FUZZY_DOCS_ROOT = "https://fuzzy-team.gitbook.io/fuzzy-macro";
+const fuzzyDocsRegistry = Object.freeze({
+  root: FUZZY_DOCS_ROOT,
+  gettingStarted: `${FUZZY_DOCS_ROOT}/getting-started/readme`,
+  systemDisplaySettings: `${FUZZY_DOCS_ROOT}/system-settings/display-settings`,
+  importantSettings: `${FUZZY_DOCS_ROOT}/macro-settings/important-settings`,
+  runningTheMacro: `${FUZZY_DOCS_ROOT}/macro-settings/running-the-macro`,
+  macroSettings: `${FUZZY_DOCS_ROOT}/macro-settings/important-settings`,
+  discordSetup: `${FUZZY_DOCS_ROOT}/discord-setup`,
+  discordWebhook: `${FUZZY_DOCS_ROOT}/discord-setup/discord-webhook-setup`,
+  discordBot: `${FUZZY_DOCS_ROOT}/discord-setup/discord-bot-setup`,
+  streamSetup: `${FUZZY_DOCS_ROOT}/discord-setup/stream-setup`,
+  commonFixes: `${FUZZY_DOCS_ROOT}/common-fixes/terminal-permissions`,
+});
+
+function resolveDocsUrl(docRef) {
+  if (!docRef) return "";
+  if (typeof docRef !== "string") return "";
+  if (/^https?:\/\//i.test(docRef)) return docRef;
+  return fuzzyDocsRegistry[docRef] || fuzzyDocsRegistry.root;
+}
+
+function escapeAttribute(value) {
+  if (value === undefined || value === null) return "";
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function openDocsLink(link) {
+  if (!link) return;
+  try {
+    if (window.eel && typeof eel.openLink === "function") {
+      eel.openLink(link);
+      return;
+    }
+  } catch (error) {
+    console.warn("Falling back to browser navigation for docs link", error);
+  }
+  window.open(link, "_blank", "noopener,noreferrer");
+}
+
+function handleHelpIconClick(event, element) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const target = element || (event ? event.currentTarget : null);
+  if (!target || !target.dataset.docUrl) return;
+  openDocsLink(target.dataset.docUrl);
+}
+
+function buildHelpIcon(config = {}) {
+  const tooltip = config.tooltip || config.helpText || "";
+  const docUrl = resolveDocsUrl(config.docs);
+  if (!tooltip && !docUrl) return "";
+
+  const tooltipBody = tooltip
+    ? `<span class="help-tooltip-copy">${tooltip}</span>`
+    : `<span class="help-tooltip-copy">Open the GitBook documentation for this section.</span>`;
+  const tooltipLink = docUrl
+    ? '<span class="help-tooltip-link">Open GitBook docs</span>'
+    : "";
+  const label = config.label || "Open help";
+
+  return `
+    <button
+      type="button"
+      class="help-icon-button"
+      aria-label="${escapeAttribute(label)}"
+      ${docUrl ? `data-doc-url="${escapeAttribute(docUrl)}"` : ""}
+      onclick="handleHelpIconClick(event, this)">
+      <span class="help-icon-glyph">?</span>
+      <span class="help-tooltip-bubble">${tooltipBody}${tooltipLink}</span>
+    </button>
+  `;
+}
+
+window.openDocsLink = openDocsLink;
+window.handleHelpIconClick = handleHelpIconClick;
+window.buildHelpIcon = buildHelpIcon;
+
 //id: id of input element
 /*
     type property: the type of input element
@@ -179,10 +264,16 @@ function buildInput(id, type) {
     }
 ]
 */
-function buildStandardContainer(parentElement, title, desc, settings) {
+function buildStandardContainer(parentElement, title, desc, settings, options = {}) {
+  const safeTitle = typeof stripHTMLTags === "function" ? stripHTMLTags(title) : title;
+  const sectionHelpIcon = buildHelpIcon({
+    tooltip: options.helpText || desc,
+    docs: options.docs,
+    label: `${safeTitle} help`,
+  });
   let out = `
         <div class = "poppins-medium standard-container" style="display: block; justify-items: unset; padding-top: 1rem;">
-            <h2 id="${title.toLowerCase().replaceAll(" ", "-")}">${title}</h2>
+            <h2 id="${title.toLowerCase().replaceAll(" ", "-")}"><span class="section-title-text">${title}</span>${sectionHelpIcon}</h2>
             <p style = "font-weight:500; font-size:1rem;">${desc}</p>
             <div class="seperator"></div>
     `;
@@ -193,6 +284,8 @@ function buildStandardContainer(parentElement, title, desc, settings) {
     textbox: "5%",
     button: "5%",
     keybind: "5%",
+    textbox_with_button: "5%",
+    draglist: "5%",
   };
 
   //add each setting
@@ -202,11 +295,16 @@ function buildStandardContainer(parentElement, title, desc, settings) {
     const isSingleButton = e.type && e.type.name === 'button';
     const alignItems = isSingleButton ? 'center' : 'flex-start';
     const leftDivStyle = isSingleButton ? 'display:flex; flex-direction:column; justify-content:center;' : '';
+    const settingHelpIcon = buildHelpIcon({
+      tooltip: e.helpText || e.desc,
+      docs: e.docs,
+      label: `${typeof stripHTMLTags === "function" ? stripHTMLTags(e.title) : e.title} help`,
+    });
     out += `
       <form style="display: flex; align-items:${alignItems}; justify-content: space-between; padding-right: ${inputPadding[e.type.name]
       }; ${i ? "margin-top:1rem" : ""};">
         <div style="width: 70%; ${leftDivStyle}">
-          <label>${e.title}</label>
+          <div class="setting-label-row"><label>${e.title}</label>${settingHelpIcon}</div>
           <p>${e.desc}</p>
         </div>
         ${buildInput(e.id, e.type)}
