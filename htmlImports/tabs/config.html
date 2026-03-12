@@ -27,6 +27,7 @@
           id: "hive_number",
           title: "Hive slot",
           desc: "The hive slot claimed.<br>1 is the closest to cannon, 6 is the furthest.",
+          docs: "importantSettings",
           type: {
             name: "dropdown",
             data: [1, 2, 3, 4, 5, 6],
@@ -37,6 +38,7 @@
           id: "movespeed",
           title: "Movespeed",
           desc: "Your movespeed without any haste",
+          docs: "importantSettings",
           type: {
             name: "textbox",
             inputType: "float",
@@ -55,13 +57,17 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "importantSettings",
+        helpText: "These are the core Bee Swarm settings the macro relies on before it can route correctly through hive and field actions.",
+      });
 
       buildStandardContainer(parentBSS, "Sprinkler", "", [
         {
           id: "sprinkler_type",
           title: "Sprinkler Type",
           desc: "The type of sprinkler that you use. Note that the macro will stack the sprinklers on top of each other when placing them",
+          docs: "importantSettings",
           type: {
             name: "dropdown",
             data: ["Basic", "Silver", "Golden", "Diamond", "Saturator"],
@@ -72,13 +78,17 @@
           id: "sprinkler_slot",
           title: "Slot",
           desc: "The hotbar slot of the sprinkler",
+          docs: "importantSettings",
           type: {
             name: "dropdown",
             data: [1, 2, 3, 4, 5, 6],
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "importantSettings",
+        helpText: "Make sure your sprinkler type and hotbar slot match your in-game loadout so the macro places the right sprinkler without misfiring other items.",
+      });
 
       buildStandardContainer(parentBSS, "Goo", "", [
         {
@@ -91,7 +101,10 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Set the shared goo slot used by the macro when any field or quest logic needs gumdrops from the hotbar.",
+      });
 
       buildStandardContainer(parentBSS, "Balloon", "", [
         {
@@ -114,7 +127,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Balloon settings decide when balloon conversion interrupts the normal task loop.",
+      });
 
       buildStandardContainer(parentBSS, "Preferences", "", [
         {
@@ -160,7 +176,10 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Preferences here affect convert timing, task timeouts, and how long the macro stays committed to certain long-running actions.",
+      });
     </script>
   </div>
   <div id="priorities" class="standard-container sub-tab-panel" style="display: none">
@@ -189,7 +208,10 @@
       }
 
       // Create standard container using shared builder
-      buildStandardContainer(parentPriorities, "Task Priority Order", "Drag and drop tasks to set their priority order. Tasks at the top have higher priority (quests and planters ignore task priority). Use the search box to quickly find tasks. Grayed out tasks are not in task queue, but can still be rearranged.", []);
+      buildStandardContainer(parentPriorities, "Task Priority Order", "Drag and drop tasks to set their priority order. Tasks at the top have higher priority (quests and planters ignore task priority). Use the search box to quickly find tasks. Grayed out tasks are not in task queue, but can still be rearranged.", [], {
+        docs: "runningTheMacro",
+        helpText: "Task priority affects the order the macro considers enabled tasks during its main loop, except for features that manage their own scheduling such as planters and quests.",
+      });
 
       // Find the container we just created
       const priorityContainer = parentPriorities.querySelector('.standard-container');
@@ -340,6 +362,7 @@
           id: "private_server_link",
           title: "Private Server Link (Optional)",
           desc: "The link of a private server for the macro to join.<br>If left blank, the macro will join a public server instead",
+          docs: "commonFixes",
           type: {
             name: "textbox",
             inputType: "string",
@@ -350,6 +373,7 @@
           id: "rejoin_method",
           title: "Rejoin Method",
           desc: "How the macro should rejoin. Deeplink is highly recommended, and all other methods use the browser",
+          docs: "commonFixes",
           type: {
             name: "dropdown",
             data: ["Deeplink", "New Tab", "Reload"],
@@ -378,7 +402,10 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "commonFixes",
+        helpText: "Rejoin settings control how the macro recovers from disconnects, failed routing, and scheduled refreshes.",
+      });
 
       buildStandardContainer(parentOther, "Haste Compensation", "", [
         {
@@ -390,7 +417,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Haste compensation adjusts macro timing to better match movement speed changes caused by buffs such as haste or bear morph.",
+      });
 
       buildStandardContainer(parentOther, "Macro Theme", "", [
         {
@@ -409,7 +439,29 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "root",
+        helpText: "Theme changes only affect the macro UI appearance and do not change runtime behavior.",
+      });
+
+      buildStandardContainer(parentOther, "Update Settings", "", [
+        {
+          id: "update_channel",
+          title: "Update Channel",
+          desc: "Stable: Only stable releases | Beta: Includes pre-release versions for testing",
+          type: {
+            name: "dropdown",
+            data: [
+              { label: "Stable Releases", value: "stable" },
+              { label: "Beta Releases", value: "beta" },
+            ],
+            triggerFunction: saveGeneralTriggerFunction,
+          },
+        },
+      ], {
+        docs: "gettingStarted",
+        helpText: "Choose whether the macro should stay on stable releases or opt into beta builds intended for earlier testing.",
+      });
 
       buildStandardContainer(parentOther, "Low Performance", "", [
         {
@@ -421,7 +473,10 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Low performance mode reduces background work when you need the macro to consume fewer system resources.",
+      });
 
       buildStandardContainer(parentOther, "Time Format", "", [
         {
@@ -444,7 +499,10 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "discordSetup",
+        helpText: "Time format affects how timestamps appear in hourly reports and webhook output, but does not change scheduling behavior.",
+      });
 
       buildStandardContainer(parentOther, "Keybinds", "", [
         {
@@ -474,7 +532,10 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "These keybinds control the macro from your keyboard and should be set to keys that will not conflict with Roblox or other automation tools.",
+      });
 
       // Standalone Export Debug container
       buildStandardContainer(parentOther, "Export Debug", "Create a zip with your exported profile, recent logs, macOS + macro version and chip info.", [
@@ -488,7 +549,10 @@
             triggerFunction: "exportDebugFolder()",
           },
         },
-      ]);
+      ], {
+        docs: "commonFixes",
+        helpText: "Use debug export when reporting issues so the team can inspect your settings and recent logs without asking you for each file separately.",
+      });
       
       // Advanced: Beta Testing (input + button on same row)
       buildStandardContainer(parentOther, "Advanced", "", [
@@ -508,7 +572,10 @@
             buttonFunction: "triggerBetaUpdate()",
           },
         },
-      ]);
+      ], {
+        docs: "gettingStarted",
+        helpText: "Advanced settings are mainly for testing or support workflows and should only be changed when you know why you need them.",
+      });
     </script>
   </div>
   <div id="discord" class="standard-container sub-tab-panel" style="display: none">
@@ -519,6 +586,7 @@
           id: "enable_webhook",
           title: "Enable Webhook",
           desc: "A webhook to send the macro's status. Does not receive commands",
+          docs: "discordWebhook",
           type: {
             name: "checkbox",
             triggerFunction: saveGeneralTriggerFunction,
@@ -528,6 +596,7 @@
           id: "webhook_link",
           title: "Webhook Link",
           desc: "The link of the webhook for the macro to use",
+          docs: "discordWebhook",
           type: {
             name: "textbox",
             inputType: "string",
@@ -539,6 +608,7 @@
           id: "send_screenshot",
           title: "Send Screenshots",
           desc: "Send screenshots of the game via the webhook",
+          docs: "discordWebhook",
           type: {
             name: "checkbox",
             triggerFunction: saveGeneralTriggerFunction,
@@ -553,13 +623,17 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "discordWebhook",
+        helpText: "Webhook setup is one-way: the macro sends status, screenshots, and reports to a Discord channel but does not accept commands through a webhook.",
+      });
 
       buildStandardContainer(parentDiscord, "Discord Bot", "", [
         {
           id: "discord_bot",
           title: "Enable Discord Bot",
           desc: "A discord bot to receive commands",
+          docs: "discordBot",
           type: {
             name: "checkbox",
             triggerFunction: saveGeneralTriggerFunction,
@@ -569,6 +643,7 @@
           id: "discord_bot_token",
           title: "Discord Bot Token",
           desc: "The token of your discord bot",
+          docs: "discordBot",
           type: {
             name: "textbox",
             inputType: "string",
@@ -576,7 +651,10 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "discordBot",
+        helpText: "The Discord bot setup is separate from webhooks and is required if you want the macro to receive remote commands.",
+      });
 
       buildStandardContainer(parentDiscord, "Discord Rich Presence", "", [
         {
@@ -588,13 +666,17 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "discordSetup",
+        helpText: "Rich Presence shows what the macro is doing in your Discord status and does not replace webhook or bot features.",
+      });
 
       buildStandardContainer(parentDiscord, "Discord Pings", "", [
         {
           id: "enable_discord_ping",
           title: "Enable Discord Pings",
           desc: "Enable pinging your Discord user for important events",
+          docs: "discordSetup",
           type: {
             name: "checkbox",
             triggerFunction: saveGeneralTriggerFunction,
@@ -604,6 +686,7 @@
           id: "discord_user_id",
           title: "Discord User ID",
           desc: "Your Discord User ID to ping for important events",
+          docs: "discordSetup",
           type: {
             name: "textbox",
             inputType: "string",
@@ -611,7 +694,10 @@
             triggerFunction: saveGeneralTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "discordSetup",
+        helpText: "Discord pings notify a specific user for important macro events. You still need the relevant Discord integration enabled for the notifications to be sent.",
+      });
 
       buildStandardContainer(
         parentDiscord,
@@ -708,7 +794,10 @@
               triggerFunction: saveGeneralTriggerFunction,
             },
           },
-        ]
+        ], {
+          docs: "discordSetup",
+          helpText: "Ping categories let you narrow which macro events should mention you in Discord.",
+        }
       );
     </script>
   </div>
@@ -724,6 +813,7 @@
             id: "enable_stream",
             title: "Enable Stream",
             desc: "Automatically start streaming",
+            docs: "streamSetup",
             type: {
               name: "checkbox",
               triggerFunction: saveGeneralTriggerFunction,
@@ -733,12 +823,16 @@
             id: "pin_stream_url",
             title: "Pin Stream URL in Discord",
             desc: "Automatically pin the stream URL message in Discord when streaming starts.<br>Requires both Discord Bot and Webhook to be enabled",
+            docs: "streamSetup",
             type: {
               name: "checkbox",
               triggerFunction: saveGeneralTriggerFunction,
             },
           },
-        ]
+        ], {
+          docs: "streamSetup",
+          helpText: "Stream setup depends on cloudflared and Discord integration. Use the docs if you need installation steps or help getting the stream URL.",
+        }
       );
     </script>
   </div>
@@ -812,7 +906,7 @@
       <!-- Current Profile Section -->
       <div class="profile-card">
         <div class="profile-card-header">
-          <span class="profile-card-title">📁 Current Profile</span>
+          <span class="profile-card-title">Current Profile</span>
         </div>
         <div style="display: flex; align-items: center; gap: 1rem">
           <span id="current-profile-display"
@@ -823,7 +917,7 @@
       <!-- Switch Profile Section -->
       <div class="profile-card">
         <div class="profile-card-header">
-          <span class="profile-card-title">🔄 Switch Profile</span>
+          <span class="profile-card-title">Switch Profile</span>
         </div>
         <p style="color: var(--text-dim); margin-bottom: 1rem; font-size: 0.9rem">
           Select a profile to switch to. Your current settings will be saved
@@ -837,7 +931,7 @@
       <!-- Create Profile Section -->
       <div class="profile-card">
         <div class="profile-card-header">
-          <span class="profile-card-title">➕ Create New Profile</span>
+          <span class="profile-card-title">Create New Profile</span>
         </div>
         <p style="color: #b9bbbe; margin-bottom: 1rem; font-size: 0.9rem">
           Create a new profile based on default settings.
@@ -854,7 +948,7 @@
       <!-- Duplicate Profile Section -->
       <div class="profile-card">
         <div class="profile-card-header">
-          <span class="profile-card-title">📋 Duplicate Profile</span>
+          <span class="profile-card-title">Duplicate Profile</span>
         </div>
         <p style="color: #b9bbbe; margin-bottom: 1rem; font-size: 0.9rem">
           Create a copy of an existing profile with a new name.
@@ -880,7 +974,7 @@
       <!-- Export Profile Section -->
       <div class="profile-card">
         <div class="profile-card-header">
-          <span class="profile-card-title">📤 Export Profile</span>
+          <span class="profile-card-title">Export Profile</span>
         </div>
         <p style="color: #b9bbbe; margin-bottom: 1rem; font-size: 0.9rem">
           Export a profile to a JSON file for backup or sharing.
@@ -904,7 +998,7 @@
       <!-- Import Profile Section -->
       <div class="profile-card">
         <div class="profile-card-header">
-          <span class="profile-card-title">📥 Import Profile</span>
+          <span class="profile-card-title">Import Profile</span>
         </div>
         <p style="color: #b9bbbe; margin-bottom: 1rem; font-size: 0.9rem">
           Import a profile from a JSON file. Choose a new name for the imported
