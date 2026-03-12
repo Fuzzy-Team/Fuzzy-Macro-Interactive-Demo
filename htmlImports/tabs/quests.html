@@ -21,7 +21,7 @@
 
         let html = `
           <div class="poppins-medium standard-container" style="padding-top:1rem;">
-            <h2>Override Gather Settings</h2>
+            <h2>Override Gather Settings ${buildHelpIcon({ docs: "runningTheMacro", tooltip: "Per-quest gather overrides let you temporarily change gather duration and return-to-hive behavior for specific quest givers." })}</h2>
             <p style="font-weight:500; font-size:1rem;">Per-quest gather overrides (mins / return). Set mins to 0 for no override.</p>
             <div class="seperator"></div>
             <table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin-top:0.5rem;">
@@ -74,7 +74,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Quest goo settings are separate from field goo settings and only apply when the macro is working on goo-related quests.",
+      });
 
       buildStandardContainer(questsSettingsParent, "Ignore Petal Quests", "Ignore specified petal quests when enabled", [
         {
@@ -86,7 +89,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Use this when you want the macro to skip quest lines you do not want automated, such as selected Spirit Bear petal quest objectives.",
+      });
     </script>
   </div>
 
@@ -151,7 +157,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Enable the quest givers you want the macro to include in its task loop. Each quest line can be toggled independently.",
+      });
     </script>
   </div>
 </div>
