@@ -67,6 +67,21 @@
           },
         },
         {
+          id: "honeystorm",
+          title: "Honey Storm",
+          desc: "Summon a Honey Storm",
+          type: {
+            name: "checkbox",
+            triggerFunction: saveProfileTriggerFunction,
+          },
+        },
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Regular collection tasks gather repeatable dispensers and hourly items during the macro's normal task loop.",
+      });
+
+      buildStandardContainer(parentCollect, "Glue Dispenser", "", [
+        {
           id: "glue_dispenser",
           title: "Glue Dispenser",
           desc: "Collect the glue dispenser in gummy bear's lair",
@@ -76,15 +91,18 @@
           },
         },
         {
-          id: "honeystorm",
-          title: "Honey Storm",
-          desc: "Summon a Honey Storm",
+          id: "glue_dispenser_use_gumdrop_slot",
+          title: "Use Gumdrop Slot",
+          desc: "Use the gumdrop quickslot instead of searching the inventory when using gumdrops",
           type: {
             name: "checkbox",
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Glue Dispenser settings control whether the macro travels to Gummy Bear's Lair and how it spends gumdrops while doing so.",
+      });
 
       buildStandardContainer(parentCollect, "Sticker Printer 🖨️", "", [
         {
@@ -106,7 +124,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Sticker Printer settings configure when the macro donates eggs and interacts with the sticker printer at Mountain Top.",
+      });
 
       buildStandardContainer(parentCollect, "Mondo Buff 🐣", "", [
         {
@@ -166,7 +187,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Mondo Buff settings decide whether the macro only tags Mondo for the buff or stays longer to collect loot and tokens.",
+      });
 
       buildStandardContainer(parentCollect, "Beesmas 🎅🏻", "", [
         {
@@ -232,7 +256,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "root",
+        helpText: "Seasonal Beesmas tasks are only useful while the relevant event content is available in-game.",
+      });
       buildStandardContainer(parentCollect, "Memory Match 💭", "", [
         {
           id: "memory_match",
@@ -270,7 +297,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Memory Match tasks send the macro to the different Memory Match boards when they are enabled in your profile.",
+      });
       buildStandardContainer(parentCollect, "Blender", "", [
         {
           id: "blender_enable",
@@ -291,7 +321,10 @@
             triggerFunction: "clearBlenderData(this)",
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Blender automation crafts and collects configured recipes, including repeated batches and timer resets.",
+      });
       function blenderItemDropDownHTML(id) {
         return buildInput(id, {
           name: "dropdown",
@@ -346,7 +379,10 @@
       }
 
       // Add Petals & Blooms cheat sheet at the bottom
-      buildStandardContainer(parentCollect, "Petals & Blooms", "Reference guide for petals and blooms", []);
+      buildStandardContainer(parentCollect, "Petals & Blooms", "Reference guide for petals and blooms", [], {
+        docs: "root",
+        helpText: "Use this cheat sheet as an in-app reference while planning collectible routes and related crafting tasks.",
+      });
       // Find the container that was just created
       const petalsContainers = parentCollect.querySelectorAll(".standard-container");
       const petalsContainer = petalsContainers[petalsContainers.length - 1];
