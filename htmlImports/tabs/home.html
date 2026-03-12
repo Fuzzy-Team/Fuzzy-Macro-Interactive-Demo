@@ -1,282 +1,59 @@
-<div class="main-content-container">
-  <div id="kill-nav" class="sub-nav-bar">
-    <div id="kill-settings" class="kill-tab-item">Settings</div>
-    <div id="kill-regular" class="kill-tab-item">Regular</div>
-    <div id="kill-boss" class="kill-tab-item">Bosses</div>
-    <div id="kill-misc" class="kill-tab-item">Misc</div>
-  </div>
-  <div id="kill-settings-tab" class="standard-container sub-tab-panel active">
-    <script>
-      const settingsMobsParent = document.getElementById("kill-settings-tab");
-      buildStandardContainer(settingsMobsParent, "Respawn Time Modifiers", "", [
-        {
-          id: "gifted_vicious",
-          title: "Gifted Vicious Bee",
-          desc: "Apply the 15% respawn time bonus from gifted vicious bee",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveGeneralTriggerFunction,
-          },
-        },
-        {
-          id: "stick_bug_amulet",
-          title: "Stick Bug Amulet",
-          desc: "Apply the -X% Monster Respawn Time from stick bug amulet",
-          type: {
-            name: "textbox",
-            inputType: "int",
-            inputLimit: 2,
-            triggerFunction: saveGeneralTriggerFunction,
-            length: 8,
-          },
-        },
-        {
-          id: "icicles_beequip",
-          title: "Icicles Beequip",
-          desc: "Apply the -X% Monster Respawn Time from the icicles beequip",
-          type: {
-            name: "textbox",
-            inputType: "int",
-            inputLimit: 2,
-            triggerFunction: saveGeneralTriggerFunction,
-            length: 8,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "These modifiers adjust mob timer expectations so the macro can better predict when repeatable enemies have respawned.",
-      });
-    </script>
+<div id="home-parent" class="flex-col gap-md">
+  <!-- Top Row: Control and Mode -->
+  <div class="flex-row gap-md">
+    <div class="poppins-semibold standard-container flex-1">
+      <h2>Macro Control
+        <button class="purple-button ml-auto d-none" id="stop-btn">Stop [F3]</button>
+        <button class="purple-button ml-auto" id="start-btn">Start [F1]</button>
+      </h2>
+    </div>
+    <div class="poppins-semibold standard-container flex-1">
+      <h2 style="margin: 0;">Macro Mode
+        <select class="ml-auto" id="macro_mode">
+          <option value="normal">Normal Mode</option>
+          <option value="field">Field Mode</option>
+          <option value="quest">Quest Mode</option>
+          <option value="bug">Bug Run Mode</option>
+        </select>
+      </h2>
+    </div>
   </div>
 
-  <div id="kill-regular-tab" class="standard-container sub-tab-panel">
-    <script>
-      const regularMobsParent = document.getElementById("kill-regular-tab");
-      buildStandardContainer(regularMobsParent, "Regular Mobs 🐞", "", [
-        {
-          id: "ladybug",
-          title: "Ladybugs",
-          desc: "Kill and loot ladybugs",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "rhinobeetle",
-          title: "Rhino Beetles",
-          desc: "Kill and loot rhino beetles",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "scorpion",
-          title: "Scorpions",
-          desc: "Kill and loot scoprions",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "mantis",
-          title: "Mantises",
-          desc: "Kill and loot mantises",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "spider",
-          title: "Spider",
-          desc: "Kill and loot the spider",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "werewolf",
-          title: "Werewolf",
-          desc: "Kill and loot the werewolf",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Regular mob tasks handle repeatable enemies such as ladybugs, rhino beetles, and spiders as part of the macro's combat loop.",
-      });
-    </script>
-  </div>
+  <!-- Bottom Row: Tasks/Planters and Logs -->
+  <div class="flex-row gap-md flex-grow-1" style="min-height: 0;">
+    <!-- Left Column: Tasks and Planters -->
+    <div class="flex-col flex-1 gap-md">
+      <div class="poppins-medium standard-container flex-grow-1 overflow-y-auto" style="min-height: 15rem;">
+        <h2>Tasks</h2>
+        <div id="task-list" class="task-list-scroll w-100"></div>
+      </div>
+      <div class="poppins-medium standard-container flex-col" id="planter-timers-container">
+        <div class="flex-row space-between">
+          <h2>Planter Timers</h2>
+          <button class="purple-button" id="clear-timers-btn">
+            Reset All Timers
+          </button>
+        </div>
+        <div class="planter-timers"></div>
+      </div>
+    </div>
 
-  <div id="kill-boss-tab" class="standard-container sub-tab-panel">
-    <script>
-      const bossMobsParent = document.getElementById("kill-boss-tab");
-      buildStandardContainer(bossMobsParent, "Stinger Hunt 🌙", "", [
-        {
-          id: "stinger_hunt",
-          title: "Enable Task",
-          desc: "Hunt and kill vicious bee when it is night",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "stinger_clover",
-          title: "Clover",
-          desc: "Search for vicious bee in clover field",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "stinger_spider",
-          title: "Spider",
-          desc: "Search for vicious bee in spider field",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "stinger_cactus",
-          title: "Cactus",
-          desc: "Search for vicious bee in cactus field",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "stinger_rose",
-          title: "Rose",
-          desc: "Search for vicious bee in rose field",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "stinger_mountain_top",
-          title: "Mountain Top",
-          desc: "Search for vicious bee in mountain top field",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "stinger_pepper",
-          title: "Pepper",
-          desc: "Search for vicious bee in pepper field",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Stinger Hunt searches supported fields for Vicious Bee at night and routes through the enabled field list.",
-      });
-
-      buildStandardContainer(bossMobsParent, "Stump Snail 🐌", "", [
-        {
-          id: "stump_snail",
-          title: "Enable Task",
-          desc: "Kill stump snail",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "stump_snail_amulet",
-          title: "Amulet",
-          desc: "What to do with the stump snail amulet.<br><br><strong>Keep</strong> - select the 'keep old' option<br><strong>Replace</strong> - select the 'replace' option<br><strong>Stop</strong> - Do not select any option, stop the macro until the amulet is kept/replaced<br><strong>Wait for command</strong> - Do not select any option, stop the macro until it receives a command to keep or replace the amulet. (Requires a discord bot)",
-          docs: "discordBot",
-          type: {
-            name: "dropdown",
-            data: ["Keep", "Replace", "Stop", "Wait for command"],
-            triggerFunction: saveProfileTriggerFunction,
-            length: 12,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Stump Snail runs can take a long time, so amulet handling and Discord command behavior matter more here than with most other mobs.",
-      });
-
-      buildStandardContainer(bossMobsParent, "Coconut Crab", "", [
-        {
-          id: "coconut_crab",
-          title: "Enable Task",
-          desc: "Kill coconut crab. The macro's ability to kill it depends on your hive level, attack and lag",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Enable Coconut Crab only if your hive can survive and clear the fight consistently enough for automation to be worth it.",
-      });
-
-      buildStandardContainer(bossMobsParent, "King Beetle", "", [
-        {
-          id: "king_beetle",
-          title: "Enable Task",
-          desc: "Kill king beetle. The macro's ability to kill it depends on your hive level, attack and lag",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "King Beetle is a simpler boss task, but it still depends on your combat readiness and route timing.",
-      });
-
-      buildStandardContainer(bossMobsParent, "Tunnel Bear", "", [
-        {
-          id: "tunnel_bear",
-          title: "Enable Task",
-          desc: "Kill tunnel bear. The macro's ability to kill it depends on your hive level, attack and lag",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Tunnel Bear automation depends on your hive's ability to finish the fight before survivability or timing becomes inconsistent.",
-      });
-    </script>
-  </div>
-
-  <div id="kill-misc-tab" class="standard-container">
-    <script>
-      const miscMobsParent = document.getElementById("kill-misc-tab");
-      buildStandardContainer(miscMobsParent, "Ant Challenge 🎯", "", [
-        {
-          id: "ant_challenge",
-          title: "Enable Task",
-          desc: "Complete ant challenges. The macro will keep the ant amulet",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Ant Challenge automation runs the challenge and keeps the resulting amulet without pausing for manual review.",
-      });
-    </script>
+    <!-- Right Column: Logs -->
+    <div class="flex-col flex-1 gap-md">
+      <div class="poppins-regular standard-container flex-grow-1 overflow-y-auto flex-col gap-xs">
+        <div class="flex-row space-between align-items-center mb-05 border-bottom">
+          <h2 style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">Logs</h2>
+          <div class="flex-row gap-xs">
+            <button class="purple-button" id="export-logs-btn"
+              style="margin-top: 0; padding: 0.3rem 0.6rem; font-size: 0.8rem;">Export</button>
+            <button class="purple-button" id="clear-logs-btn"
+              style="margin-top: 0; padding: 0.3rem 0.6rem; font-size: 0.8rem;">Clear</button>
+          </div>
+        </div>
+        <div id="logs" class="flex-col gap-xs overflow-y-auto flex-grow-1">
+          <!-- Logs will be appended here -->
+        </div>
+      </div>
+    </div>
   </div>
 </div>
