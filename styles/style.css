@@ -72,24 +72,6 @@
 /* New Modern Dark Theme for Fuzzy Macro */
 @import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-/* Font utility classes used across HTML imports */
-.poppins-regular {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-}
-.poppins-medium {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-}
-.poppins-semibold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-}
-.poppins-bold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-}
-
 :root {
   --background: #121212;
   --surface: #1E1E1E;
@@ -371,6 +353,127 @@ select:focus {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.section-title-text {
+  min-width: 0;
+}
+
+.setting-label-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.help-icon-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--primary-rgb), 0.35);
+  background: rgba(var(--primary-rgb), 0.12);
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.12s ease;
+}
+
+.help-icon-button:hover,
+.help-icon-button:focus-visible {
+  background: rgba(var(--primary-rgb), 0.2);
+  border-color: rgba(var(--primary-rgb), 0.55);
+  color: var(--active-text);
+  transform: translateY(-1px);
+}
+
+.help-icon-button:focus-visible {
+  outline: 2px solid rgba(var(--primary-rgb), 0.45);
+  outline-offset: 2px;
+}
+
+.help-icon-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.help-tooltip-bubble {
+  position: absolute;
+  left: calc(100% + 0.75rem);
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  min-width: 15rem;
+  max-width: 22rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(18, 18, 18, 0.97);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+  opacity: 0;
+  pointer-events: auto;
+  visibility: hidden;
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+  z-index: 200;
+}
+
+.help-tooltip-copy {
+  display: block;
+  color: var(--text-main);
+}
+
+.help-tooltip-copy strong {
+  color: var(--active-text);
+}
+
+.help-tooltip-link {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--primary);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.help-icon-button:hover .help-tooltip-bubble,
+.help-icon-button:focus-visible .help-tooltip-bubble {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Keep the tooltip visible while the user hovers or focuses the bubble itself */
+.help-tooltip-bubble:hover,
+.help-tooltip-bubble:focus,
+.help-tooltip-bubble:focus-within {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+@media (max-width: 960px) {
+  .help-tooltip-bubble {
+    left: auto;
+    right: 0;
+    top: calc(100% + 0.6rem);
+    transform: translateY(-4px);
+    min-width: 13rem;
+    max-width: min(18rem, 70vw);
+  }
+
+  .help-icon-button:hover .help-tooltip-bubble,
+  .help-icon-button:focus-visible .help-tooltip-bubble {
+    transform: translateY(0);
+  }
 }
 
 .standard-container label,
@@ -800,65 +903,6 @@ select:focus {
   display: flex;
 }
 
-/* Welcome modal styling (matches modal-dialog/modal-overlay theme) */
-.welcome-overlay {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  z-index: 10000;
-  justify-content: center;
-  align-items: center;
-}
-
-.welcome-box {
-  background: var(--surface);
-  color: var(--text-main);
-  padding: 1.25rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  max-width: 480px;
-  width: 92%;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  text-align: center;
-}
-
-.welcome-box .title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-  color: var(--text-main);
-}
-
-.welcome-box .message {
-  color: var(--text-dim);
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-}
-
-.welcome-box .btn {
-  padding: 0.46rem 0.9rem;
-  border-radius: 6px;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-main);
-  cursor: pointer;
-}
-
-.welcome-box .btn:hover { background: var(--surface-hover); }
-
-.welcome-box .btn.primary {
-  background: var(--primary);
-  color: #FFFFFF;
-  border: 1px solid var(--primary);
-}
-
-.welcome-box .actions { display:flex; gap:0.75rem; justify-content:center; }
-
 .planter-timers {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1139,42 +1183,4 @@ select:focus {
 
 #import-profile-modal h3 {
   color: var(--text-main) !important;
-}
-
-/* Disable specific control buttons (visual + interaction) */
-/* Start/Stop, import patterns, update, and profile import/export controls */
-.start-btn,
-#start-btn,
-#stop-btn,
-#import-patterns-button,
-.import-export-button,
-button[onclick*="exportProfile"],
-button[onclick*="confirmImportProfile"],
-button[onclick*="import-profile-file"],
-.profile-btn-secondary,
-.profile-btn-primary {
-  opacity: 0.45 !important;
-  pointer-events: none !important;
-  cursor: not-allowed !important;
-}
-
-/* Also make the export select and hidden file input inert visually */
-#export-profile-select,
-#import-profile-file {
-  opacity: 0.45 !important;
-  pointer-events: none !important;
-}
-
-/* Gather import/export controls and beta update button */
-#export-field-button,
-#import-field-button,
-#confirm-import-button,
-#cancel-import-button,
-#import-modal,
-#beta_update_button,
-#reset-field-button,
-#export_debug_button {
-  opacity: 0.45 !important;
-  pointer-events: none !important;
-  cursor: not-allowed !important;
 }
