@@ -52,17 +52,22 @@
           id: "field_drift_compensation",
           title: "Field Drift Compensation",
           desc: "Move the player to the supreme saturator between gather patterns",
+          docs: "runningTheMacro",
           type: {
             name: "checkbox",
             triggerFunction: triggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Choose the field, toggle shift lock, and configure field-specific gathering behavior before the macro starts a gather cycle.",
+      });
       buildStandardContainer(parentElement, "Pattern", "", [
         {
           id: "shape",
           title: "Shape",
           desc: "The movement pattern",
+          docs: "runningTheMacro",
           type: {
             name: "dropdown",
             data: [],
@@ -73,6 +78,7 @@
           id: "size",
           title: "Size",
           desc: "Affects each pattern differently. Generally affects the overall area covered by the pattern",
+          docs: "runningTheMacro",
           type: {
             name: "dropdown",
             data: ["XS", "S", "M", "L", "XL"],
@@ -83,6 +89,7 @@
           id: "width",
           title: "Width",
           desc: "Affects each pattern differently. Generally affects the number of repetitions of each loop. For cornerx patterns, also affects the distance the macro travels to the corner",
+          docs: "runningTheMacro",
           type: {
             name: "dropdown",
             data: [1, 2, 3, 4, 5, 6, 7, 8],
@@ -107,7 +114,10 @@
             triggerFunction: triggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Pattern settings control the movement path used while gathering. Shape, size, width, and inversion settings all affect how the macro covers a field.",
+      });
       buildStandardContainer(
         parentElement,
         "Rotate Camera",
@@ -134,6 +144,10 @@
             },
           },
         ]
+        , {
+          docs: "runningTheMacro",
+          helpText: "Rotate the camera before gathering if your field routing depends on a particular starting orientation.",
+        }
       );
       buildStandardContainer(parentElement, "Gather Until", "", [
         {
@@ -162,6 +176,7 @@
           id: "return",
           title: "Return To Hive",
           desc: "The method used to return to hive", //<br> - Reset is best for blue hives with balloons<br> - Walk is generally good but inconsistent<br> - Rejoin is best for those without balloons",
+          docs: "runningTheMacro",
           type: {
             name: "dropdown",
             data: ["💀 Reset", "👟 Walk", "🔄 Rejoin", "🌱 Whirligig"],
@@ -172,6 +187,7 @@
           id: "use_whirlwig_fallback",
           title: "Use Whirlwig Fallback",
           desc: "If walking fails to find the hive, attempt a whirligig before resetting",
+          docs: "runningTheMacro",
           type: {
             name: "checkbox",
             triggerFunction: triggerFunction,
@@ -190,7 +206,10 @@
                     }
                 }
                 */
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "These settings decide when to stop gathering and how the macro returns to hive once the field target is reached.",
+      });
       buildStandardContainer(
         parentElement,
         "Goo Settings",
@@ -217,6 +236,10 @@
             },
           },
         ]
+        , {
+          docs: "runningTheMacro",
+          helpText: "Use field-level goo settings when you want gathering behavior to spend gumdrops in a specific field instead of relying on global quest behavior.",
+        }
       );
       buildStandardContainer(
         parentElement,
@@ -254,6 +277,10 @@
             },
           },
         ]
+        , {
+          docs: "runningTheMacro",
+          helpText: "Start location settings bias the part of the field where the macro begins its gathering route.",
+        }
       );
 
       // Add control buttons at the bottom
