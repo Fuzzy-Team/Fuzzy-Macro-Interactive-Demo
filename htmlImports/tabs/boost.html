@@ -6,7 +6,10 @@
   <div id="boost-hotbar-tab" class="standard-container sub-tab-panel active">
     <script>
       const hotbarParent = document.getElementById("boost-hotbar-tab");
-      buildStandardContainer(hotbarParent, "Hotbar", "Use your hotbar slots", []);
+      buildStandardContainer(hotbarParent, "Hotbar", "Use your hotbar slots", [], {
+        docs: "runningTheMacro",
+        helpText: "Hotbar settings let you automate consumables and active items based on what the macro is currently doing.",
+      });
       const hotbar = document.getElementById("hotbar").parentElement;
       for (let i = 1; i <= 7; i++) {
         const html = `
@@ -89,7 +92,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Field Booster settings handle the scheduled boosters found around the map and optionally redirect gathering into boosted fields.",
+      });
       const diceIconsArray = toImgArray(diceIcons);
       buildStandardContainer(buffsParent, "Automatic Field Boost ⬆️ 🎲", "Automatically maintains glitter and dice boosts. Created by Sev", [
         {
@@ -106,6 +112,7 @@
           id: "Auto_Field_Boost",
           title: "AFB",
           desc: "Enable Auto Field Boost <br> Recommend that tasks other than gathering are disabled",
+          docs: "runningTheMacro",
           type: {
             name: "checkbox",
             triggerFunction: saveProfileTriggerFunction,
@@ -148,6 +155,7 @@
           id: "AFB_dice",
           title: "Field Dice",
           desc: "Type of Field Dice to use",
+          docs: "runningTheMacro",
           type: {
             name: "dropdown",
             data: diceIconsArray,
@@ -179,6 +187,7 @@
           id: "AFB_glitter",
           title: "Glitter",
           desc: "Allow Glitter to maintain buff",
+          docs: "runningTheMacro",
           type: {
             name: "checkbox",
             triggerFunction: saveProfileTriggerFunction,
@@ -198,6 +207,7 @@
           id: "AFB_limit_on",
           title: "Enable Time Limit",
           desc: "Enable to stop using AFB after a set amount of hours",
+          docs: "runningTheMacro",
           type: {
             name: "checkbox",
             triggerFunction: saveProfileTriggerFunction,
@@ -214,7 +224,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Automatic Field Boost maintains dice and glitter buffs on a preferred field. It works best when other interrupts are minimized.",
+      });
       buildStandardContainer(buffsParent, "Sticker Stack <img src='./assets/icons/sticker_stack.png' style='margin-left:0.4rem; height: 1.3rem;'>", "", [
         {
           id: "sticker_stack",
@@ -244,7 +257,10 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ]);
+      ], {
+        docs: "runningTheMacro",
+        helpText: "Sticker Stack automation spends the selected item type to activate the stack and can optionally use Hive Skins as part of the routine.",
+      });
     </script>
   </div>
 </div>
