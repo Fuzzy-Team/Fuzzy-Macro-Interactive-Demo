@@ -36,11 +36,21 @@
                     <label>Harvest When Full</label>
                     <p>Collect the planters when they are fully grown. Overrides the 'Harvest Every X Hours' setting</p>
                 </div>
-                <label class="checkbox-container" style="margin-top: 0.6rem;">
-                    <input type="checkbox" id="manual_planters_collect_full" onchange="saveSetting(this, 'profile')">
-                    <span class="checkmark"></span>
-                </label>
+                    <label class="checkbox-container" style="margin-top: 0.6rem;">
+                        <input type="checkbox" id="manual_planters_collect_full" onchange="saveSetting(this, 'profile')">
+                        <span class="checkmark"></span>
+                    </label>
             </form> 
+            <form style="display: flex; align-items:flex-start; justify-content: space-between; padding-right: 5%; margin-top:1rem">
+                <div style="width: 70%;">
+                    <label>Planter check</label>
+                    <p>Check inventory after looting planters and make sure that the planter was in fact collected.</p>
+                </div>
+                <label class="checkbox-container" style="margin-top: 0.6rem; margin-left: 8px;">
+                        <input type="checkbox" id="manual_planters_check" onchange="saveSetting(this, 'profile')">
+                        <span class="checkmark"></span>
+                    </label>
+                </form>
             <form style="display: flex; align-items:flex-start; justify-content: space-between; padding-right: 5%; margin-top:1rem">
                 <div style="width: 70%;">
                     <label>Clear Planter Timers</label>
@@ -75,11 +85,21 @@
                     <label>Harvest When Full</label>
                     <p>Collect the planters when they are fully grown. Overrides the 'Harvest Every X Hours' setting</p>
                 </div>
-                <label class="checkbox-container" style="margin-top: 0.6rem;">
-                    <input type="checkbox" id="auto_planters_collect_full" onchange="saveSetting(this, 'profile')" data-input-bind="auto_planters_collect_auto">
-                    <span class="checkmark"></span>
-                </label>
+                    <label class="checkbox-container" style="margin-top: 0.6rem;">
+                        <input type="checkbox" id="auto_planters_collect_full" onchange="saveSetting(this, 'profile')" data-input-bind="auto_planters_collect_auto">
+                        <span class="checkmark"></span>
+                    </label>
             </form> 
+            <form style="display: flex; align-items:flex-start; justify-content: space-between; padding-right: 5%; margin-top:1rem">
+                <div style="width: 70%;">
+                    <label>Planter check</label>
+                    <p>Check inventory after looting planters and make sure that the planter was in fact collected.</p>
+                </div>
+                <label class="checkbox-container" style="margin-top: 0.6rem; margin-left: 8px;">
+                        <input type="checkbox" id="auto_planters_check" onchange="saveSetting(this, 'profile')">
+                        <span class="checkmark"></span>
+                    </label>
+                </form>
             <form style="display: flex; align-items:flex-start; justify-content: space-between; padding-right: 5%; margin-top:1rem">
                 <div style="width: 70%;">
                     <label>Auto Harvest</label>
@@ -139,7 +159,7 @@
         </div>
 
         <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
-            <h2>Nectar Priority</h2>
+            <h2 id="nectar-priority-heading">Nectar Priority</h2>
             <p style="font-weight:500; font-size:1rem;">The macro will aim to maintain nectars above the min%. The higher up a nectar is, the greater its priority</p>
             <div class="seperator"></div>
             <div id="auto-nectar-priority">
@@ -158,7 +178,7 @@
         <!-- Allowed Planters merged into Planter Field Restrictions (enable toggle moved into each planter panel) -->
 
         <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
-            <h2>Planters Allowed & Restrictions</h2>
+            <h2 id="planter-restrictions-heading">Planters Allowed & Restrictions</h2>
             <p style="font-weight:500; font-size:1rem;">Restrict which fields each planter can be placed in when using Auto Planters.</p>
             <div class="seperator"></div>
             <div id="auto-planter-field-restrictions">
@@ -167,7 +187,7 @@
         </div>
 
         <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
-            <h2>Allowed Fields</h2>
+            <h2 id="allowed-fields-heading">Allowed Fields</h2>
             <p style="font-weight:500; font-size:1rem;">Fields the macro can plant in</p>
             <div class="seperator"></div>
             <div id="auto-allowed-fields">
@@ -176,7 +196,7 @@
         </div>
         
         <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
-            <h2>Wax from Planters</h2>
+            <h2 id="wax-planters-heading">Wax from Planters</h2>
             <p style="font-weight:500; font-size:1rem;">Reference guide for wax drops from different planters</p>
             <div class="seperator"></div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem;">
@@ -191,4 +211,43 @@
     
     </div>
 </div>
+
+<script>
+    function appendSectionHelp(targetId, config) {
+        const heading = document.getElementById(targetId);
+        if (!heading || typeof buildHelpIcon !== "function") return;
+        heading.insertAdjacentHTML("beforeend", buildHelpIcon(config));
+    }
+
+    appendSectionHelp("manual-planters", {
+        docs: "runningTheMacro",
+        tooltip: "Manual Planters follows the planter cycle you configure directly, including harvest timing, verification, and the three-slot rotation.",
+        label: "Manual planters help",
+    });
+    appendSectionHelp("auto-planters", {
+        docs: "runningTheMacro",
+        tooltip: "Auto Planters manages planter placement around nectar goals, harvest timing, presets, and field restrictions with less manual scheduling.",
+        label: "Auto planters help",
+    });
+    appendSectionHelp("nectar-priority-heading", {
+        docs: "runningTheMacro",
+        tooltip: "Nectar Priority tells Auto Planters which nectars matter most so it can choose better planter and harvest decisions.",
+        label: "Nectar priority help",
+    });
+    appendSectionHelp("planter-restrictions-heading", {
+        docs: "runningTheMacro",
+        tooltip: "Planter restrictions limit which fields each planter can use, helping you avoid poor placements or unsupported routes.",
+        label: "Planter restrictions help",
+    });
+    appendSectionHelp("allowed-fields-heading", {
+        docs: "runningTheMacro",
+        tooltip: "Allowed Fields is the global whitelist for Auto Planters. If a field is disabled here, the macro will not plant there.",
+        label: "Allowed fields help",
+    });
+    appendSectionHelp("wax-planters-heading", {
+        docs: "root",
+        tooltip: "Use this cheat sheet when planning wax-related planter routes or deciding which planter types are worth maintaining.",
+        label: "Wax from planters help",
+    });
+</script>
 
