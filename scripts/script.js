@@ -35,6 +35,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const selectorsToDisable = [
     "#start-btn",
     "#stop-btn",
+    "#autoclicker_start",
+    "#autoclicker_stop",
+    "#auto-gifted-basic-bee-start",
+    "#auto-gifted-basic-bee-stop",
     "#import-patterns-button",
     "#export-profile-select",
     "#import-profile-file",
