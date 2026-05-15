@@ -701,7 +701,7 @@ async function checkAndUpdateButtonState() {
 let buttonStateInterval;
 
 $("#home-placeholder")
-  .load("../htmlImports/tabs/home.html", async () => {
+  .load("./htmlImports/tabs/home.html", async () => {
     await loadTasks();
     await updateStartButtonText();
 

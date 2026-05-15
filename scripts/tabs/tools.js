@@ -514,5 +514,5 @@ function loadTools() {
 }
 
 $("#tools-placeholder")
-  .load("../htmlImports/tabs/tools.html", loadTools)
+  .load("./htmlImports/tabs/tools.html", loadTools)
   .on("click", ".tools-tab-item", (event) => switchToolsTab(event.currentTarget));

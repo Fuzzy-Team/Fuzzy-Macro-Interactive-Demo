@@ -26,5 +26,5 @@ function loadKill(){
 }
 
 $("#kill-placeholder")
-.load("../htmlImports/tabs/kill.html", loadKill) //load kill tab
+.load("./htmlImports/tabs/kill.html", loadKill) //load kill tab
 .on("click", ".kill-tab-item", (event) => switchKillTab(event.currentTarget)) //navigate between tabs

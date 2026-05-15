@@ -36,5 +36,5 @@ function clearAFBData(ele){
 }
 
 $("#boost-placeholder")
-.load("../htmlImports/tabs/boost.html", loadBoost) //load kill tab
+.load("./htmlImports/tabs/boost.html", loadBoost) //load kill tab
 .on("click", ".boost-tab-item", (event) => switchBoostTab(event.currentTarget)) //navigate between tabs

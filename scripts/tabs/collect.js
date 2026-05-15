@@ -20,4 +20,4 @@ async function loadCollect(){
 }
 
 $("#collect-placeholder", loadCollect)
-.load("../htmlImports/tabs/collect.html") //load config tab
+.load("./htmlImports/tabs/collect.html") //load config tab

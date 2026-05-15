@@ -169,7 +169,7 @@ function initializeQuickActions() {
 }
 
 $("#config-placeholder", loadConfig)
-  .load("../htmlImports/tabs/config.html") //load config tab
+  .load("./htmlImports/tabs/config.html") //load config tab
   .on("click", ".config-tab-item", (event) =>
     switchConfigTab(event.currentTarget)
   ); //navigate between fields

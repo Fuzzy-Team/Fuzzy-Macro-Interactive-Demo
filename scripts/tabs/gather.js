@@ -91,7 +91,7 @@ async function switchGatherTab(target) {
 }
 
 $("#gather-placeholder")
-  .load("../htmlImports/tabs/gather.html", () =>
+  .load("./htmlImports/tabs/gather.html", () =>
     switchGatherTab(document.getElementById("field-1"))
   ) //load home tab, switch to field 1 once its done loading
   .on("click", ".gather-tab-item", (event) =>

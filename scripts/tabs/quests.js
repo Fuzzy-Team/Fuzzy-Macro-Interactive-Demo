@@ -26,5 +26,5 @@ function loadQuests(){
 }
 
 $("#quests-placeholder")
-.load("../htmlImports/tabs/quests.html", loadQuests) //load kill tab
+.load("./htmlImports/tabs/quests.html", loadQuests) //load kill tab
 .on("click", ".quests-tab-item", (event) => switchQuestsTab(event.currentTarget)) //navigate between tabs

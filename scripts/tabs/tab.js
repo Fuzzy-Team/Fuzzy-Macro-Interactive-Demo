@@ -25,7 +25,7 @@ function switchTab(event) {
 }
 //load and add event handlers
 $("#tabs-placeholder")
-    .load("../htmlImports/persistent/tabs.html", function () {
+    .load("./htmlImports/persistent/tabs.html", function () {
         // Restore active tab
         const activeTabId = localStorage.getItem("activeTab")
         if (activeTabId) {

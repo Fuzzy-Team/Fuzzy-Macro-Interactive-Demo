@@ -412,4 +412,4 @@ function changePreset(ele){
 }
 
 $("#planters-placeholder")
-.load("../htmlImports/tabs/planters.html", loadPlanters) 
+.load("./htmlImports/tabs/planters.html", loadPlanters) 
