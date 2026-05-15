@@ -1,6 +1,7 @@
 
 
 function switchQuestsTab(target){
+    setActiveSubtab("activeQuestsSubtab", target.id)
     //hide all tabs
 
     //remove the arrow indicator
@@ -22,9 +23,9 @@ function switchQuestsTab(target){
 }
 
 function loadQuests(){
-    switchQuestsTab(document.getElementById("quests-settings"))
+    switchQuestsTab(document.getElementById(getActiveSubtab("activeQuestsSubtab", "quests-quests")))
 }
 
 $("#quests-placeholder")
-.load("./htmlImports/tabs/quests.html", loadQuests) //load kill tab
+.load("../htmlImports/tabs/quests.html", loadQuests) //load kill tab
 .on("click", ".quests-tab-item", (event) => switchQuestsTab(event.currentTarget)) //navigate between tabs

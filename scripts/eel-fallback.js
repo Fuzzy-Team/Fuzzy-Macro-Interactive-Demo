@@ -222,6 +222,7 @@
         gather: false,
         planters: [],
       },
+      fuzzyAITokenRankings: {},
     };
   }
 
@@ -236,6 +237,10 @@
         general: { ...defaultState().general, ...((parsed && parsed.general) || {}) },
         profiles: (parsed && parsed.profiles) || { Default: defaultProfileSettings() },
         fieldsData: { ...defaultFieldsData(), ...((parsed && parsed.fieldsData) || {}) },
+        fuzzyAITokenRankings: {
+          ...(defaultState().fuzzyAITokenRankings || {}),
+          ...((parsed && parsed.fuzzyAITokenRankings) || {}),
+        },
       };
       return stateCache;
     } catch (err) {
@@ -451,6 +456,124 @@
     }),
     resetManualPlanterTimer: method(() => true),
     resetAutoPlanterTimer: method(() => true),
+
+    getAutoUpdateCheckDisabled: method(() => true),
+    checkForUpdates: method(() => ({ available: false })),
+    disableAutoUpdateCheck: method(() => true),
+
+    saveFuzzyAITokenRanking: method((fieldName, data) => {
+      const state = loadState();
+      const key = String(fieldName || "").toLowerCase();
+      if (!state.fuzzyAITokenRankings) state.fuzzyAITokenRankings = {};
+      state.fuzzyAITokenRankings[key] = {
+        preferred_tokens: (data && data.preferred_tokens) || "",
+        ignored_tokens: (data && data.ignored_tokens) || "",
+      };
+      saveState(state);
+      return true;
+    }),
+    loadFuzzyAITokenRanking: method((fieldName) => {
+      const state = loadState();
+      const key = String(fieldName || "").toLowerCase();
+      const row = (state.fuzzyAITokenRankings && state.fuzzyAITokenRankings[key]) || {};
+      return {
+        preferred_tokens: row.preferred_tokens || "",
+        ignored_tokens: row.ignored_tokens || "",
+      };
+    }),
+
+    exportPlanterSettings: method(() => {
+      const state = loadState();
+      const payload = {
+        metadata: {
+          macro_version: "static-demo",
+          export_date: new Date().toISOString(),
+        },
+        settings: {
+          manual: deepClone(state.manualPlanterData),
+          auto: deepClone(state.autoPlanterData),
+        },
+      };
+      return JSON.stringify(payload, null, 2);
+    }),
+    importPlanterSettings: method((jsonText) => {
+      try {
+        const parsed = JSON.parse(jsonText);
+        const settings = parsed.settings || parsed;
+        const state = loadState();
+        if (settings.manual) {
+          state.manualPlanterData = {
+            ...defaultState().manualPlanterData,
+            ...settings.manual,
+          };
+        }
+        if (settings.auto) {
+          state.autoPlanterData = {
+            ...defaultState().autoPlanterData,
+            ...settings.auto,
+          };
+        }
+        saveState(state, true);
+        return {
+          success: true,
+          macro_version: (parsed.metadata && parsed.metadata.macro_version) || "static-demo",
+          imported_settings_count: Object.keys(settings).length || 1,
+        };
+      } catch (err) {
+        return { success: false };
+      }
+    }),
+
+    getAutoClickerStatus: method(() => ({
+      running: false,
+      message: "Demo mode — controls disabled",
+    })),
+    syncToolSession: method(() => ({
+      status: {
+        auto_clicker: { running: false, message: "Demo mode" },
+        auto_gifted_basic_bee: {
+          running: false,
+          state: "idle",
+          message: "Demo mode",
+          bee_slot_x: null,
+          bee_slot_y: null,
+          basic_eggs_used: 0,
+          royal_jellies_used: 0,
+          rolls: 0,
+          last_detected_text: "None",
+        },
+        hotbar_buff: {
+          running: false,
+          state: "idle",
+          message: "Demo mode",
+          last_slot: null,
+        },
+      },
+    })),
+    startAutoClickerTool: method(() => ({ message: "Not available in the website demo." })),
+    stopAutoClickerTool: method(() => ({ message: "Stopped" })),
+    getAutoGiftedBasicBeeStatus: method(() => ({
+      running: false,
+      state: "idle",
+      message: "Demo mode",
+      bee_slot_x: null,
+      bee_slot_y: null,
+      basic_eggs_used: 0,
+      royal_jellies_used: 0,
+      rolls: 0,
+      last_detected_text: "None",
+    })),
+    startAutoGiftedBasicBeeTool: method(() => ({ message: "Not available in the website demo." })),
+    stopAutoGiftedBasicBeeTool: method(() => ({ message: "Stopped" })),
+    getHotbarBuffStatus: method(() => ({
+      running: false,
+      state: "idle",
+      message: "Demo mode",
+      last_slot: null,
+    })),
+    startHotbarBuffTool: method(() => ({ message: "Not available in the website demo." })),
+    stopHotbarBuffTool: method(() => ({ message: "Stopped" })),
+
     getManualPlanterData: method(() => deepClone(loadState().manualPlanterData)),
     getAutoPlanterData: method(() => deepClone(loadState().autoPlanterData)),
     setAutoPlanterGather: method((value) => {

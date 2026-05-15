@@ -23,9 +23,18 @@ function switchTab(event) {
     // Save active tab
     localStorage.setItem("activeTab", event.currentTarget.id)
 }
+
+function setActiveSubtab(storageKey, tabId) {
+    if (!storageKey || !tabId) return
+    localStorage.setItem(storageKey, tabId)
+}
+
+function getActiveSubtab(storageKey, fallbackTabId) {
+    return localStorage.getItem(storageKey) || fallbackTabId
+}
 //load and add event handlers
 $("#tabs-placeholder")
-    .load("./htmlImports/persistent/tabs.html", function () {
+    .load("../htmlImports/persistent/tabs.html", function () {
         // Restore active tab
         const activeTabId = localStorage.getItem("activeTab")
         if (activeTabId) {

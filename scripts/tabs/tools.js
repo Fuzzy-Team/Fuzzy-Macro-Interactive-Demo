@@ -1,12 +1,16 @@
 let autoClickerTimer = null;
 let autoClickerStatusTimer = null;
 let autoGiftedBasicBeeStatusTimer = null;
+let hotbarBuffStatusTimer = null;
 let toolSessionSynced = false;
 const TOOL_SESSION_ID = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 const AUTOCLICKER_MIN_INTERVAL = 10;
 const AUTOCLICKER_DEFAULT_INTERVAL = 100;
 const AUTOCLICKER_DEFAULT_START_DELAY = 3;
 const AUTO_GIFTED_BASIC_BEE_DEFAULT_DELAY = 3;
+const TICKET_CALC_DEFAULT_NEXT_PRICE = 100000;
+const TICKET_CALC_MAX_TICKETS = 100000;
+const TICKET_CALC_PRESETS = [10, 100, 500];
 
 const TREAT_COST_HONEY = 10000;
 const BOND_REQUIREMENTS = [
@@ -85,7 +89,12 @@ function getBondCalcElements() {
 }
 
 function calculateTreatsForBond(bond, bonusPercent) {
-  const bondPerTreat = 10 * (1 + bonusPercent / 100);
+  // Treat 100% as the base (no bonus). Any input is interpreted as total
+  // Bond from Treats %. We compute the effective bonus relative to 100%
+  // (e.g., input 120 -> effective 20). Ensure the effective bonus
+  // never goes below 0.
+  const effectiveBonus = Math.max(0, (Number(bonusPercent) || 0) - 100);
+  const bondPerTreat = 10 * (1 + effectiveBonus / 100);
   return Math.ceil(bond / bondPerTreat);
 }
 
@@ -201,6 +210,145 @@ function initializeBondTreatCalculator() {
   updateBondTreatCalculator();
 }
 
+function getTicketCalcElements() {
+  return {
+    nextPrice: document.getElementById("ticket-calc-next-price"),
+    nextPriceUnit: document.getElementById("ticket-calc-next-price-unit"),
+    customAmount: document.getElementById("ticket-calc-custom-amount"),
+    budget: document.getElementById("ticket-calc-budget"),
+    budgetUnit: document.getElementById("ticket-calc-budget-unit"),
+    warning: document.getElementById("ticket-calc-warning"),
+    presetBreakdown: document.getElementById("ticket-calc-presets-breakdown"),
+  };
+}
+
+function normalizeTicketPrice(value, unit) {
+  const multiplier = Number(unit) || 1;
+  let price = Math.round(((Number(value) || 0) * multiplier) / 1000) * 1000;
+  if (price < TICKET_CALC_DEFAULT_NEXT_PRICE) price = TICKET_CALC_DEFAULT_NEXT_PRICE;
+  return price;
+}
+
+function getTicketsBoughtFromNextPrice(nextPrice) {
+  if (nextPrice === TICKET_CALC_DEFAULT_NEXT_PRICE) return 0;
+  if (nextPrice < 102000) return 1;
+
+  const scaledPrice = nextPrice / 1000 - 100;
+  const inverseExponent = nextPrice <= 1824000 ? 5 / 6 : 10 / 17;
+  return Math.floor(Math.pow(scaledPrice, inverseExponent)) + 1;
+}
+
+function getTicketPriceAfterBought(ticketsBought) {
+  if (ticketsBought <= 0) return TICKET_CALC_DEFAULT_NEXT_PRICE;
+  if (ticketsBought === 1) return 101000;
+
+  const exponent = ticketsBought < 499 ? 6 / 5 : 17 / 10;
+  return Math.ceil(Math.pow(ticketsBought, exponent) + 99) * 1000;
+}
+
+function calculateTicketPurchase(nextPrice, ticketCount) {
+  const ticketsToBuy = Math.max(0, Math.min(TICKET_CALC_MAX_TICKETS, Math.floor(Number(ticketCount) || 0)));
+  const ticketsAlreadyBought = getTicketsBoughtFromNextPrice(nextPrice);
+  let totalCost = 0;
+  let finalTicketPrice = 0;
+
+  for (let index = 0; index < ticketsToBuy; index += 1) {
+    const ticketPrice = index === 0 ? nextPrice : getTicketPriceAfterBought(ticketsAlreadyBought + index);
+    totalCost += ticketPrice;
+    finalTicketPrice = ticketPrice;
+  }
+
+  return {
+    ticketsAlreadyBought,
+    ticketsToBuy,
+    totalCost,
+    averagePrice: ticketsToBuy > 0 ? totalCost / ticketsToBuy : 0,
+    finalTicketPrice,
+    nextPriceAfterPurchase: getTicketPriceAfterBought(ticketsAlreadyBought + ticketsToBuy),
+  };
+}
+
+function calculateTicketsForBudget(nextPrice, budget) {
+  const ticketsAlreadyBought = getTicketsBoughtFromNextPrice(nextPrice);
+  const honeyBudget = Math.max(0, Number(budget) || 0);
+  let totalCost = 0;
+  let tickets = 0;
+
+  while (tickets < TICKET_CALC_MAX_TICKETS) {
+    const ticketPrice = tickets === 0 ? nextPrice : getTicketPriceAfterBought(ticketsAlreadyBought + tickets);
+    if (totalCost + ticketPrice > honeyBudget) break;
+    totalCost += ticketPrice;
+    tickets += 1;
+  }
+
+  return { tickets, totalCost };
+}
+
+function updateTicketPriceCalculator() {
+  const el = getTicketCalcElements();
+  if (!el.nextPrice || !el.nextPriceUnit || !el.customAmount || !el.budget || !el.budgetUnit || !el.presetBreakdown) return;
+
+  const rawNextPrice = Number(el.nextPrice.value);
+  const nextPrice = normalizeTicketPrice(el.nextPrice.value, el.nextPriceUnit.value);
+  const budget = Math.max(0, (Number(el.budget.value) || 0) * (Number(el.budgetUnit.value) || 1));
+  let customAmount = Math.floor(Number(el.customAmount.value) || 1);
+
+  if (customAmount < 1) customAmount = 1;
+  if (customAmount > TICKET_CALC_MAX_TICKETS) customAmount = TICKET_CALC_MAX_TICKETS;
+  el.customAmount.value = customAmount;
+
+  if (el.warning) {
+    const rawWholePrice = rawNextPrice * (Number(el.nextPriceUnit.value) || 1);
+    const isRounded = Number.isFinite(rawWholePrice) && rawWholePrice > 0 && rawWholePrice !== nextPrice;
+    el.warning.style.display = isRounded ? "block" : "none";
+    el.warning.textContent = "Ticket prices below 100K are raised to 100K, and prices are rounded to the nearest 1,000 honey.";
+  }
+
+  const budgetPurchase = calculateTicketsForBudget(nextPrice, budget);
+
+  const rows = [...TICKET_CALC_PRESETS, customAmount].filter(
+    (amount, index, amounts) => amounts.indexOf(amount) === index
+  );
+
+  const presetRows = rows.map((amount) => {
+    const preset = calculateTicketPurchase(nextPrice, amount);
+    const label = amount === customAmount && !TICKET_CALC_PRESETS.includes(amount) ? `${formatWholeNumber(amount)} Tickets (Custom)` : `${formatWholeNumber(amount)} Tickets`;
+    return `
+      <tr>
+        <td>${label}</td>
+        <td>${formatCompactHoney(preset.totalCost)}</td>
+      </tr>
+    `;
+  });
+
+  presetRows.push(`
+    <tr>
+      <td>Max (${formatWholeNumber(budgetPurchase.tickets)} Tickets)</td>
+      <td>${formatCompactHoney(budgetPurchase.totalCost)}</td>
+    </tr>
+  `);
+
+  el.presetBreakdown.innerHTML = presetRows.join("");
+}
+
+function initializeTicketPriceCalculator() {
+  const el = getTicketCalcElements();
+  if (!el.nextPrice || !el.nextPriceUnit || !el.customAmount || !el.budget || !el.budgetUnit) return;
+
+  if (!el.nextPrice.value) el.nextPrice.value = "100";
+  if (!el.nextPriceUnit.value) el.nextPriceUnit.value = "1000000";
+  if (!el.customAmount.value) el.customAmount.value = "1";
+  if (!el.budget.value) el.budget.value = "0";
+  if (!el.budgetUnit.value) el.budgetUnit.value = "1000000";
+
+  [el.nextPrice, el.nextPriceUnit, el.customAmount, el.budget, el.budgetUnit].forEach((input) => {
+    input.addEventListener("change", updateTicketPriceCalculator);
+    input.addEventListener("input", updateTicketPriceCalculator);
+  });
+
+  updateTicketPriceCalculator();
+}
+
 function getAutoClickerInterval() {
   const input = document.getElementById("autoclicker_interval_ms");
   if (!input) return AUTOCLICKER_DEFAULT_INTERVAL;
@@ -240,6 +388,16 @@ async function refreshToolStopHotkey() {
     const autoGiftedBasicBeeStopHotkey = document.getElementById("auto-gifted-basic-bee-stop-hotkey");
     if (autoGiftedBasicBeeStopHotkey) {
       autoGiftedBasicBeeStopHotkey.textContent = stopKey;
+    }
+
+    const hotbarBuffStartHotkey = document.getElementById("hotbar-buff-start-hotkey");
+    if (hotbarBuffStartHotkey) {
+      hotbarBuffStartHotkey.textContent = settings.hotbar_buff_start_keybind || "F4";
+    }
+
+    const hotbarBuffStopHotkey = document.getElementById("hotbar-buff-stop-hotkey");
+    if (hotbarBuffStopHotkey) {
+      hotbarBuffStopHotkey.textContent = stopKey;
     }
   } catch (error) {
     console.error("Failed to load tool stop hotkey:", error);
@@ -303,6 +461,10 @@ async function syncToolSessionState() {
 
     if (result?.status?.auto_gifted_basic_bee) {
       renderAutoGiftedBasicBeeStatus(result.status.auto_gifted_basic_bee);
+    }
+
+    if (result?.status?.hotbar_buff) {
+      renderHotbarBuffStatus(result.status.hotbar_buff);
     }
   } catch (error) {
     console.error("Failed to sync tool session:", error);
@@ -483,7 +645,99 @@ function initializeAutoGiftedBasicBeeTool() {
   refreshAutoGiftedBasicBeeStatus();
 }
 
+function renderHotbarBuffStatus(status) {
+  if (!status) return;
+
+  const state = document.getElementById("hotbar-buff-state");
+  const lastSlot = document.getElementById("hotbar-buff-last-slot");
+  const message = document.getElementById("hotbar-buff-message");
+  const startButton = document.getElementById("hotbar-buff-start");
+  const stopButton = document.getElementById("hotbar-buff-stop");
+
+  if (state) state.textContent = status.state || "idle";
+  if (lastSlot) lastSlot.textContent = status.last_slot ? `Slot ${status.last_slot}` : "None";
+  if (message) message.textContent = status.message || "Ready";
+
+  if (startButton) {
+    startButton.classList.toggle("active", !!status.running);
+    startButton.textContent = "Start";
+    startButton.style.display = status.running ? "none" : "";
+  }
+
+  if (stopButton) {
+    stopButton.classList.toggle("active", !!status.running);
+    stopButton.style.display = status.running ? "" : "none";
+  }
+}
+
+async function refreshHotbarBuffStatus() {
+  if (!window.eel || typeof eel.getHotbarBuffStatus !== "function") return;
+
+  try {
+    const status = await eel.getHotbarBuffStatus()();
+    renderHotbarBuffStatus(status);
+  } catch (error) {
+    console.error("Failed to refresh hotbar buff status:", error);
+  }
+}
+
+async function startHotbarBuffTool() {
+  if (!window.eel || typeof eel.startHotbarBuffTool !== "function") return;
+
+  try {
+    const result = await eel.startHotbarBuffTool()();
+    const message = document.getElementById("hotbar-buff-message");
+    if (message && result && result.message) {
+      message.textContent = result.message;
+    }
+    await refreshHotbarBuffStatus();
+  } catch (error) {
+    console.error("Failed to start hotbar buff tool:", error);
+  }
+}
+
+async function stopHotbarBuffTool() {
+  if (!window.eel || typeof eel.stopHotbarBuffTool !== "function") return;
+
+  try {
+    const result = await eel.stopHotbarBuffTool()();
+    const message = document.getElementById("hotbar-buff-message");
+    if (message && result && result.message) {
+      message.textContent = result.message;
+    }
+    await refreshHotbarBuffStatus();
+  } catch (error) {
+    console.error("Failed to stop hotbar buff tool:", error);
+  }
+}
+
+function initializeHotbarBuffTool() {
+  if (!hotbarBuffStatusTimer) {
+    hotbarBuffStatusTimer = setInterval(refreshHotbarBuffStatus, 1000);
+  }
+
+  refreshHotbarBuffStatus();
+  switchHotbarBuffToolSlot(1);
+}
+
+function switchHotbarBuffToolSlot(slot) {
+  Array.from(document.getElementsByClassName("hotbar-buff-tool-slot")).forEach((button) => {
+    button.classList.remove("active");
+  });
+  Array.from(document.getElementsByClassName("hotbar-buff-tool-panel")).forEach((panel) => {
+    panel.classList.remove("active");
+  });
+
+  const button = document.getElementById(`hotbar-buff-tool-slot-${slot}`);
+  const panel = document.getElementById(`hotbar-buff-tool-slot-${slot}-panel`);
+  if (!button || !panel) return;
+
+  button.classList.add("active");
+  panel.classList.add("active");
+}
+
 function switchToolsTab(target) {
+  setActiveSubtab("activeToolsSubtab", target.id);
   const selector = document.getElementById("tools-select");
   if (selector) selector.remove();
 
@@ -508,11 +762,15 @@ function loadTools() {
   refreshToolStopHotkey();
   initializeAutoClickerTool();
   initializeBondTreatCalculator();
+  initializeTicketPriceCalculator();
   initializeAutoGiftedBasicBeeTool();
+  initializeHotbarBuffTool();
 
-  switchToolsTab(document.getElementById("tools-autoclicker"));
+  switchToolsTab(
+    document.getElementById(getActiveSubtab("activeToolsSubtab", "tools-autoclicker"))
+  );
 }
 
 $("#tools-placeholder")
-  .load("./htmlImports/tabs/tools.html", loadTools)
+  .load("../htmlImports/tabs/tools.html", loadTools)
   .on("click", ".tools-tab-item", (event) => switchToolsTab(event.currentTarget));

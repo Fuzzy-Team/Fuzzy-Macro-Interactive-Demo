@@ -65,6 +65,15 @@
             <h2>Planter Cycles</h2>
             <p style = "font-weight:500; font-size:1rem;">The macro can place and collect up to 3 planters at once each cycle. Setting a field or planter as 'none' will make the macro ignore that slot</p>
         </div>
+
+        <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
+            <h2>Selected Planters</h2>
+            <p style="font-weight:500; font-size:1rem;">Map selected planters to hotbar slots. Slot 0 uses inventory search.</p>
+            <div class="seperator"></div>
+            <div id="manual-selected-planter-hotbar-slots" class="planter-hotbar-grid">
+
+            </div>
+        </div>
     </div>
     
     <div id = "planters-auto" class="planter-tab tab-main" style="display: none;">
@@ -159,7 +168,7 @@
         </div>
 
         <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
-            <h2 id="nectar-priority-heading">Nectar Priority</h2>
+            <h2>Nectar Priority</h2>
             <p style="font-weight:500; font-size:1rem;">The macro will aim to maintain nectars above the min%. The higher up a nectar is, the greater its priority</p>
             <div class="seperator"></div>
             <div id="auto-nectar-priority">
@@ -178,7 +187,7 @@
         <!-- Allowed Planters merged into Planter Field Restrictions (enable toggle moved into each planter panel) -->
 
         <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
-            <h2 id="planter-restrictions-heading">Planters Allowed & Restrictions</h2>
+            <h2>Planters Allowed & Restrictions</h2>
             <p style="font-weight:500; font-size:1rem;">Restrict which fields each planter can be placed in when using Auto Planters.</p>
             <div class="seperator"></div>
             <div id="auto-planter-field-restrictions">
@@ -187,16 +196,25 @@
         </div>
 
         <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
-            <h2 id="allowed-fields-heading">Allowed Fields</h2>
+            <h2>Allowed Fields</h2>
             <p style="font-weight:500; font-size:1rem;">Fields the macro can plant in</p>
             <div class="seperator"></div>
             <div id="auto-allowed-fields">
 
             </div>
         </div>
+
+        <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
+            <h2>Selected Planters</h2>
+            <p style="font-weight:500; font-size:1rem;">Map enabled planters to hotbar slots. Slot 0 uses inventory search.</p>
+            <div class="seperator"></div>
+            <div id="auto-selected-planter-hotbar-slots" class="planter-hotbar-grid">
+
+            </div>
+        </div>
         
         <div class="poppins-medium standard-container" style="flex-direction: column; padding-top: 1rem; justify-content: unset;">
-            <h2 id="wax-planters-heading">Wax from Planters</h2>
+            <h2>Wax from Planters</h2>
             <p style="font-weight:500; font-size:1rem;">Reference guide for wax drops from different planters</p>
             <div class="seperator"></div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem;">
@@ -210,44 +228,25 @@
         </div>
     
     </div>
+
+    <div style="display: flex; justify-content: center; gap: 10px; margin: 20px 0;">
+        <button id="export-planters-button" class="import-export-button">
+            Export Settings
+        </button>
+        <button id="import-planters-button" class="import-export-button">
+            Import Settings
+        </button>
+    </div>
 </div>
 
-<script>
-    function appendSectionHelp(targetId, config) {
-        const heading = document.getElementById(targetId);
-        if (!heading || typeof buildHelpIcon !== "function") return;
-        heading.insertAdjacentHTML("beforeend", buildHelpIcon(config));
-    }
-
-    appendSectionHelp("manual-planters", {
-        docs: "runningTheMacro",
-        tooltip: "Manual Planters follows the planter cycle you configure directly, including harvest timing, verification, and the three-slot rotation.",
-        label: "Manual planters help",
-    });
-    appendSectionHelp("auto-planters", {
-        docs: "runningTheMacro",
-        tooltip: "Auto Planters manages planter placement around nectar goals, harvest timing, presets, and field restrictions with less manual scheduling.",
-        label: "Auto planters help",
-    });
-    appendSectionHelp("nectar-priority-heading", {
-        docs: "runningTheMacro",
-        tooltip: "Nectar Priority tells Auto Planters which nectars matter most so it can choose better planter and harvest decisions.",
-        label: "Nectar priority help",
-    });
-    appendSectionHelp("planter-restrictions-heading", {
-        docs: "runningTheMacro",
-        tooltip: "Planter restrictions limit which fields each planter can use, helping you avoid poor placements or unsupported routes.",
-        label: "Planter restrictions help",
-    });
-    appendSectionHelp("allowed-fields-heading", {
-        docs: "runningTheMacro",
-        tooltip: "Allowed Fields is the global whitelist for Auto Planters. If a field is disabled here, the macro will not plant there.",
-        label: "Allowed fields help",
-    });
-    appendSectionHelp("wax-planters-heading", {
-        docs: "root",
-        tooltip: "Use this cheat sheet when planning wax-related planter routes or deciding which planter types are worth maintaining.",
-        label: "Wax from planters help",
-    });
-</script>
-
+<div id="import-planters-modal" class="modal-overlay">
+    <div class="modal-dialog poppins-regular">
+        <h3>Import Planter Settings</h3>
+        <p>Paste your JSON settings below:</p>
+        <textarea id="import-planters-json-textarea" class="modal-textarea" placeholder="Paste JSON here..."></textarea>
+        <div class="modal-actions">
+            <button id="cancel-import-planters-button" class="btn-cancel">Cancel</button>
+            <button id="confirm-import-planters-button" class="btn-confirm">Import</button>
+        </div>
+    </div>
+</div>

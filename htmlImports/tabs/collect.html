@@ -1,8 +1,23 @@
 <div class="main-content-container">
-  <div id="collect" class="standard-container">
+  <div id="collect-nav" class="sub-nav-bar poppins-regular" style="margin-bottom: 2rem;">
+    <div id="collect-dispensers" class="collect-tab-item active">
+      Dispensers
+    </div>
+    <div id="collect-activities" class="collect-tab-item">
+      Activities
+    </div>
+    <div id="collect-seasonal" class="collect-tab-item">
+      Seasonal
+    </div>
+    <div id="collect-blender" class="collect-tab-item">
+      Blender
+    </div>
+  </div>
+
+  <div id="collect-dispensers-tab" class="standard-container sub-tab-panel active">
     <script>
-      const parentCollect = document.getElementById("collect");
-      buildStandardContainer(parentCollect, "Regular ⏳", "", [
+      const parentCollectDispensers = document.getElementById("collect-dispensers-tab");
+      buildStandardContainer(parentCollectDispensers, "Regular ⏳", "", [
         {
           id: "wealth_clock",
           title: "Wealth Clock",
@@ -75,12 +90,9 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Regular collection tasks gather repeatable dispensers and hourly items during the macro's normal task loop.",
-      });
+      ]);
 
-      buildStandardContainer(parentCollect, "Glue Dispenser", "", [
+      buildStandardContainer(parentCollectDispensers, "Glue Dispenser", "", [
         {
           id: "glue_dispenser",
           title: "Glue Dispenser",
@@ -99,12 +111,14 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Glue Dispenser settings control whether the macro travels to Gummy Bear's Lair and how it spends gumdrops while doing so.",
-      });
+      ]);
+    </script>
+  </div>
 
-      buildStandardContainer(parentCollect, "Sticker Printer 🖨️", "", [
+  <div id="collect-activities-tab" class="standard-container sub-tab-panel">
+    <script>
+      const parentCollectActivities = document.getElementById("collect-activities-tab");
+      buildStandardContainer(parentCollectActivities, "Sticker Printer 🖨️", "", [
         {
           id: "sticker_printer",
           title: "Enable Task",
@@ -124,12 +138,9 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Sticker Printer settings configure when the macro donates eggs and interacts with the sticker printer at Mountain Top.",
-      });
+      ]);
 
-      buildStandardContainer(parentCollect, "Mondo Buff 🐣", "", [
+      buildStandardContainer(parentCollectActivities, "Mondo Buff 🐣", "", [
         {
           id: "mondo_buff",
           title: "Enable Task",
@@ -187,12 +198,53 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Mondo Buff settings decide whether the macro only tags Mondo for the buff or stays longer to collect loot and tokens.",
-      });
+      ]);
 
-      buildStandardContainer(parentCollect, "Beesmas 🎅🏻", "", [
+      buildStandardContainer(parentCollectActivities, "Memory Match 💭", "", [
+        {
+          id: "memory_match",
+          title: "Memory Match",
+          desc: "Complete the memory match in front of pro shop",
+          type: {
+            name: "checkbox",
+            triggerFunction: saveProfileTriggerFunction,
+          },
+        },
+        {
+          id: "mega_memory_match",
+          title: "Mega Memory Match",
+          desc: "Complete the memory match inside the badge bearer guild",
+          type: {
+            name: "checkbox",
+            triggerFunction: saveProfileTriggerFunction,
+          },
+        },
+        {
+          id: "extreme_memory_match",
+          title: "Extreme Memory Match",
+          desc: "Complete the memory match near pepper field",
+          type: {
+            name: "checkbox",
+            triggerFunction: saveProfileTriggerFunction,
+          },
+        },
+        {
+          id: "winter_memory_match",
+          title: "Winter Memory Match",
+          desc: "Collect the memory match near honey bee",
+          type: {
+            name: "checkbox",
+            triggerFunction: saveProfileTriggerFunction,
+          },
+        },
+      ]);
+    </script>
+  </div>
+
+  <div id="collect-seasonal-tab" class="standard-container sub-tab-panel">
+    <script>
+      const parentCollectSeasonal = document.getElementById("collect-seasonal-tab");
+      buildStandardContainer(parentCollectSeasonal, "Beesmas 🎅🏻", "", [
         {
           id: "stockings",
           title: "Stockings",
@@ -256,52 +308,29 @@
             triggerFunction: saveProfileTriggerFunction,
           },
         },
-      ], {
-        docs: "root",
-        helpText: "Seasonal Beesmas tasks are only useful while the relevant event content is available in-game.",
-      });
-      buildStandardContainer(parentCollect, "Memory Match 💭", "", [
-        {
-          id: "memory_match",
-          title: "Memory Match",
-          desc: "Complete the memory match in front of pro shop",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "mega_memory_match",
-          title: "Mega Memory Match",
-          desc: "Complete the memory match inside the badge bearer guild",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "extreme_memory_match",
-          title: "Extreme Memory Match",
-          desc: "Complete the memory match near pepper field",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-        {
-          id: "winter_memory_match",
-          title: "Winter Memory Match",
-          desc: "Collect the memory match near honey bee",
-          type: {
-            name: "checkbox",
-            triggerFunction: saveProfileTriggerFunction,
-          },
-        },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Memory Match tasks send the macro to the different Memory Match boards when they are enabled in your profile.",
-      });
-      buildStandardContainer(parentCollect, "Blender", "", [
+      ]);
+
+      buildStandardContainer(parentCollectSeasonal, "Petals & Blooms", "Reference guide for petals and blooms", []);
+      const seasonalContainers = parentCollectSeasonal.querySelectorAll(".standard-container");
+      const petalsContainer = seasonalContainers[seasonalContainers.length - 1];
+      const petalsImageContainer = document.createElement("div");
+      petalsImageContainer.style.cssText = "display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem; width: 100%;";
+      petalsImageContainer.innerHTML = `
+                <img 
+                    src="./assets/cheatsheet/petals.png" 
+                    alt="Petals and Blooms Cheat Sheet"
+                    class="zoomable-image"
+                    style="width: 100%; max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer;"
+                />
+            `;
+      petalsContainer.appendChild(petalsImageContainer);
+    </script>
+  </div>
+
+  <div id="collect-blender-tab" class="standard-container sub-tab-panel">
+    <script>
+      const parentCollectBlender = document.getElementById("collect-blender-tab");
+      buildStandardContainer(parentCollectBlender, "Blender", "", [
         {
           id: "blender_enable",
           title: "Enable Task",
@@ -321,10 +350,8 @@
             triggerFunction: "clearBlenderData(this)",
           },
         },
-      ], {
-        docs: "runningTheMacro",
-        helpText: "Blender automation crafts and collects configured recipes, including repeated batches and timer resets.",
-      });
+      ]);
+
       function blenderItemDropDownHTML(id) {
         return buildInput(id, {
           name: "dropdown",
@@ -332,9 +359,11 @@
           triggerFunction: "saveSetting(this, 'profile')",
         });
       }
+
       const blenderItemsArray = toImgArray(blenderIcons);
       const blenderParent = document.getElementById("blender").parentElement;
-      for (let i = 1; i < 4; i++) {
+      const blenderItemSlots = 5;
+      for (let i = 1; i <= blenderItemSlots; i++) {
         const blenderItemHTML = `
                     <div class="seperator" style="margin-bottom: 1rem;"></div>
                     <h3 class="poppins-semibold" style = "margin-bottom: 0.9rem;">Item ${i}</h3>
@@ -377,26 +406,6 @@
                 `;
         blenderParent.innerHTML += blenderItemHTML;
       }
-
-      // Add Petals & Blooms cheat sheet at the bottom
-      buildStandardContainer(parentCollect, "Petals & Blooms", "Reference guide for petals and blooms", [], {
-        docs: "root",
-        helpText: "Use this cheat sheet as an in-app reference while planning collectible routes and related crafting tasks.",
-      });
-      // Find the container that was just created
-      const petalsContainers = parentCollect.querySelectorAll(".standard-container");
-      const petalsContainer = petalsContainers[petalsContainers.length - 1];
-      const petalsImageContainer = document.createElement("div");
-      petalsImageContainer.style.cssText = "display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem; width: 100%;";
-      petalsImageContainer.innerHTML = `
-                <img 
-                    src="./assets/cheatsheet/petals.png" 
-                    alt="Petals and Blooms Cheat Sheet"
-                    class="zoomable-image"
-                    style="width: 100%; max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer;"
-                />
-            `;
-      petalsContainer.appendChild(petalsImageContainer);
     </script>
   </div>
 </div>
