@@ -371,6 +371,24 @@ async function loadTasks() {
         };
       }
 
+      if (collectName === "sprouts") {
+        if (!setdat.sprouts_enable) return { enabled: false };
+        return {
+          enabled: true,
+          title: "Collect",
+          desc: `🌱 Sprouts`,
+        };
+      }
+
+      if (collectName === "sticker_sprout") {
+        if (!setdat.sticker_sprout_watch) return { enabled: false };
+        return {
+          enabled: true,
+          title: "Collect",
+          desc: `🌱 Sticker Sprout`,
+        };
+      }
+
       // Regular collect items
       if (!setdat[collectName]) return { enabled: false };
       const emoji = collectEmojis[collectName] || "";
@@ -832,9 +850,9 @@ $("#home-placeholder")
   .on("click", "#update-btn", async (event) => {
     //start button
     if (!event.currentTarget.classList.contains("active")) {
-      purpleButtonToggle(event.currentTarget, ["Update", "Updating"]);
+      purpleButtonToggle(event.currentTarget, ["Reset demo", "Resetting"]);
       event.currentTarget.disabled = true;
-      if (window.updateProgress) window.updateProgress(0, "Starting update");
+      if (window.updateProgress) window.updateProgress(0, "Resetting demo");
       await eel.update();
     }
   })

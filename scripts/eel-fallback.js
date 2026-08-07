@@ -59,6 +59,7 @@
     "collect_mountain_booster",
     "collect_sticker_stack",
     "collect_sticker_printer",
+    "collect_sprouts",
     "kill_stump_snail",
     "kill_ladybug",
     "kill_rhinobeetle",
@@ -466,6 +467,31 @@
     checkForUpdates: method(() => ({ available: false })),
     disableAutoUpdateCheck: method(() => true),
 
+    getModelStatus: method(() => ({
+      models: [
+        { name: "token_detection_standard.mlmodelc", installed: true, size_bytes: 0 },
+        { name: "blooms-and-petals-standard.mlmodelc", installed: true, size_bytes: 0 },
+        { name: "sprinkler_detection_standard.mlmodelc", installed: true, size_bytes: 0 },
+        { name: "token_detection_small.mlmodelc", installed: true, size_bytes: 0 },
+        { name: "loot_detection_small.mlmodelc", installed: true, size_bytes: 0 },
+        { name: "token_detection_mini.mlmodelc", installed: true, size_bytes: 0 },
+        { name: "loot_detection_mini.mlmodelc", installed: true, size_bytes: 0 },
+        { name: "Blooms-and-petals-mini.mlmodelc", installed: true, size_bytes: 0 },
+        { name: "Blooms-and-petals-light.mlmodelc", installed: true, size_bytes: 0 },
+      ],
+    })),
+    downloadMissingModels: method(() => ({
+      ok: true,
+      message: "Models are mocked as installed in the website demo.",
+    })),
+    resetTaskPrioritiesToDefault: method(() => {
+      const state = loadState();
+      const profile = getCurrentProfile(state);
+      profile.task_priority_order = deepClone(DEFAULT_TASK_PRIORITY_ORDER);
+      saveState(state, true);
+      return true;
+    }),
+
     saveFuzzyAITokenRanking: method((fieldName, data) => {
       const state = loadState();
       const key = String(fieldName || "").toLowerCase();
@@ -681,7 +707,22 @@
       saveState(state);
       return true;
     }),
-    update: method(() => true),
+    update: method(() => {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {
+        /* ignore */
+      }
+      stateCache = null;
+      if (window.updateProgress) window.updateProgress(40, "Clearing demo settings");
+      setTimeout(() => {
+        if (window.updateProgress) window.updateProgress(100, "Demo reset");
+        setTimeout(() => {
+          window.location.reload();
+        }, 250);
+      }, 350);
+      return true;
+    }),
     updateFromHash: method(() => false),
 
     getRecentLogs: method(() => deepClone(loadState().recentLogs || [])),
